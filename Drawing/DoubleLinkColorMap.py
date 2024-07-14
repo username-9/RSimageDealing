@@ -133,9 +133,14 @@ def matrix_expand_square(array: np.ndarray, block_size: int) -> np.ndarray:
     return new_arr
 
 
-def colormap_array(dataset_1: gdal.Dataset, dataset_2: gdal.Dataset, color_array: np.ndarray) -> np.ndarray:
+def colormap_array(dataset_1: gdal.Dataset, dataset_2: gdal.Dataset,
+                   color_array: np.ndarray,
+                   classification_list_1: list = None,
+                   classification_list_2: list = None) -> np.ndarray:
     """
     output an array with three bands with linking color map array
+    :param classification_list_2: the second raster classification list defined by own
+    :param classification_list_1: the first raster classification list defined by own
     :param dataset_1: the first dataset (direction in color map ——）
     :param dataset_2: the second dataset （direction in color map |)
     :param color_array: the color map array
@@ -147,14 +152,65 @@ def colormap_array(dataset_1: gdal.Dataset, dataset_2: gdal.Dataset, color_array
     print(f"Dataset-1: max: {factor_1_max}, min: {factor_1_min}")
     factor_2_max, factor_2_min = np.max(factor_2_arr), np.min(factor_2_arr)
     print(f"Dataset-2: max: {factor_2_max}, min: {factor_2_min}")
-    factor_1_norm = (factor_1_arr - factor_1_min) / (factor_1_max - factor_1_min)
-    factor_2_norm = (factor_2_arr - factor_2_min) / (factor_2_max - factor_2_min)
-    out_arr = np.zeros((3, factor_1_norm.shape[0], factor_1_norm.shape[1]), dtype=np.uint8)
-    for i in tqdm(range(factor_1_norm.shape[0])):
-        for j in range(factor_1_norm.shape[1]):
-            x_loc = int(factor_1_norm[i, j] * color_array.shape[1] - 1)
-            y_loc = int(factor_2_norm[i, j] * color_array.shape[0]) - 1
-            out_arr[::-1, i, j] = color_array[y_loc, x_loc, :]
+    out_arr = np.zeros((3, factor_1_arr.shape[0], factor_1_arr.shape[1]), dtype=np.uint8)
+
+    # link map with default classification method
+    if classification_list_1 is None and classification_list_2 is None:
+        factor_1_norm = (factor_1_arr - factor_1_min) / (factor_1_max - factor_1_min)
+        factor_2_norm = (factor_2_arr - factor_2_min) / (factor_2_max - factor_2_min)
+        for i in tqdm(range(factor_1_norm.shape[0])):
+            for j in range(factor_1_norm.shape[1]):
+                x_loc = int(factor_1_norm[i, j] * color_array.shape[1]) - 1
+                y_loc = int(factor_2_norm[i, j] * color_array.shape[0]) - 1
+                out_arr[::-1, i, j] = color_array[y_loc, x_loc, :]
+    else:
+        # get the color classification list by own defined classification method
+        if classification_list_1 is not None and classification_list_2 is not None:
+            class_num_1 = len(classification_list_1)
+            class_num_2 = len(classification_list_2)
+            class_range_1 = []
+            class_range_2 = []
+            if class_num_1 == color_array.shape[1] and class_num_2 == color_array.shape[0]:
+                print("classification of factor 1 as:")
+                for i in range(class_num_1):
+                    if i == 0:
+                        print(f"class {1}: min -> {classification_list_1[i]}")
+                        class_range_1.append([factor_1_min, classification_list_1[i]])
+                    else:
+                        print(f"{i + 1}: {classification_list_1[i]} -> {classification_list_1[i + 1]}")
+                        class_range_1.append([classification_list_1[i], classification_list_1[i + 1]])
+                print("classification of factor 2 as:")
+                for i in range(class_num_2):
+                    if i == 0:
+                        print(f"class {1}: min -> {classification_list_2[i]}")
+                        class_range_2.append([factor_2_min, classification_list_2[i]])
+                    else:
+                        print(f"{i + 1}: {classification_list_2[i]} -> {classification_list_2[i + 1]}")
+                        class_range_2.append([classification_list_2[i], classification_list_2[i + 1]])
+            if class_num_1 == (color_array.shape[1] + 1) and class_num_2 == (color_array.shape[0] + 1):
+                print("classification of factor 1 as:")
+                for i in range(class_num_1 - 1):
+                    print(f"{i + 1}: {classification_list_1[i]} -> {classification_list_1[i + 1]}")
+                    class_range_1.append([classification_list_1[i], classification_list_1[i + 1]])
+                print("classification of factor 2 as:")
+                for i in range(class_num_2 - 1):
+                    print(f"{i + 1}: {classification_list_2[i]} -> {classification_list_2[i + 1]}")
+                    class_range_2.append([classification_list_2[i], classification_list_2[i + 1]])
+        else:
+            raise ValueError(f"the size of classification array can't match the number of color number")
+        for i in tqdm(range(factor_1_arr.shape[0])):
+            for j in range(factor_1_arr.shape[1]):
+                x_loc = None
+                y_loc = None
+                class_num = len(class_range_1)
+                for k in range(class_num):
+                    if class_range_1[k][0] < factor_1_arr[i, j] <= class_range_1[k][1]:
+                        x_loc = int(((k + 1) / class_num) * color_array.shape[1]) - 1  # index in python is begun at 0
+                class_num = len(class_range_2)
+                for k in range(class_num):
+                    if class_range_2[k][0] < factor_2_arr[i, j] <= class_range_2[k][1]:
+                        y_loc = int(((k + 1) / class_num) * color_array.shape[0])
+                out_arr[::-1, i, j] = color_array[y_loc, x_loc, :]
     return out_arr
 
 
@@ -168,6 +224,10 @@ def add_grid(img_arr, color_num: int, origin_location: tuple = (0, 0)):
     for i in range(1, int((img_arr.shape[1]) / (img_arr.shape[1] / color_num) + 1)):
         cv2.line(color_arr, (i * y_block_size, origin_location[1]), (i * y_block_size, img_arr.shape[0]),
                  (250, 250, 250), 1)
+
+
+def image_improve(img_arr):
+    pass
 
 
 if __name__ == "__main__":
