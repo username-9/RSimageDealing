@@ -111,9 +111,12 @@ class ImageBlock:
             del self.ds
         return self.block_region
 
-    def get_blocks_region(self, function: Callable[[np.ndarray], None] = None) -> list:
+    def get_blocks_region(self, function: Callable[[np.ndarray], None] = None, multi_process: bool = False,
+                          process_pool: int = 5) -> list:
         """
         read raster by specified size
+        :param multi_process: whether to use multiprocessing
+        :param process_pool: the number of sub-processes
         :param function: function using for goal calculation (option)
         :return: a list of block information (origin point x, origin point y, x-size, y-size)
         """
@@ -139,15 +142,18 @@ class ImageBlock:
                     (block_num_x * block_x_size, block_num_y * block_y_size, remaining_x, remaining_y))
                 if function is not None:
                     self.ds = gdal.Open(self.image, gdal.GA_ReadOnly)
-                    for x_pos, y_pos, x_size, y_size in self.block_region:
-                        try:
-                            print(
-                                f'the block region is x = {x_pos}, y = {y_pos}, the size is x = {x_size}, y = {y_size}')
-                            self.block_array = self.ds.ReadAsArray(x_pos, y_pos, x_size, y_size)
-                            function(self.block_array)
-                        except Exception as e:
-                            print(f"{e}\nSomething error happened in reading")
-                    del self.ds
+                    if multi_process:
+                        pass
+                    else:
+                        for x_pos, y_pos, x_size, y_size in self.block_region:
+                            try:
+                                print(
+                                    f'the block region is x = {x_pos}, y = {y_pos}, the size is x = {x_size}, y = {y_size}')
+                                self.block_array = self.ds.ReadAsArray(x_pos, y_pos, x_size, y_size)
+                                function(self.block_array)
+                            except Exception as e:
+                                print(f"{e}\nSomething error happened in reading")
+                        del self.ds
         return self.block_region
 
     def read_by_generator(self) -> Generator:

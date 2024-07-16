@@ -162,5 +162,5 @@ if __name__ == '__main__':
     # for file in file_list:
     #     ds = gdal.Open(file, gdal.GA_Update)
     #     set_nodata(ds, -9999)
-    ds = gdal.Open(r"C:\Users\PZH\Desktop\REF\clip_output.tif", gdal.GA_Update)
-    set_nodata(ds, 0)
+    ds = gdal.Open(r"C:\Users\PZH\Desktop\drawing\MEM\output0716\output_map_2007.tif", gdal.GA_Update)
+    set_nodata(ds, -1)
