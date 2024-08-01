@@ -60,8 +60,20 @@ def nc_to_tiff(input_file_path: str, output_file_dir: str,
     :return: None
     """
     nc_data = nc.Dataset(input_file_path)
-    lon = nc_data.variables['lon'][:]
-    lat = nc_data.variables['lat'][:]
+    dimensions = nc_data.dimensions
+    lon_dim = None
+    lat_dim = None
+    for key in dimensions.keys():
+        if key == "longitude":
+            lon_dim = key
+        elif key == "latitude":
+            lat_dim = key
+        elif key == "lon":
+            lon_dim = key
+        elif key == "lat":
+            lat_dim = key
+    lon = nc_data.variables[lon_dim][:]
+    lat = nc_data.variables[lat_dim][:]
     nc_arr = np.array(nc_data.variables[output_variable]).astype(nc_datatype)
     # check the order of data
     if lat[0] < lat[-1]:

@@ -280,6 +280,24 @@ def fix_vector_error(input_shp, output_shp):
     print("Fix done")
 
 
+def workdir_filelist(path, file_format: str = ".tif"):
+    """
+    set work directory and get all files with specific extension
+    :param path: work directory
+    :param file_format: specific extension
+    :return: file list needed
+    """
+    if os.path.exists(path):
+        os.chdir(path)
+        files = os.listdir(path)
+        for file in files:
+            if not file.endswith(file_format):
+                files.remove(file)
+        return files
+    else:
+        raise OSError(f"Path {path} does not exist")
+
+
 if __name__ == '__main__':
     # folder_path = r"D:\Data\VegetationResilienceDealing\Integrate_Output\PRE\PRE_BTH_CLIP_OUTPUT"
     # start_data = datetime(2000, 1, 1)

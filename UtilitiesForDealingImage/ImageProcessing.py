@@ -8,10 +8,12 @@ from UtilitiesForDealingImage.WriteMain import raster_write
 
 
 def shape_warp_for_raster(raster: str, input_shape: str, out_raster,
-                          open_type: str = gdal.GA_ReadOnly, srs="EPSG:4326", cropToCutline: bool = False) -> None:
+                          open_type: str = gdal.GA_ReadOnly, srs="EPSG:4326", cropToCutline: bool = False,
+                          nodata=None) -> None:
     """
     To clip raster with a specific shape
-    :param cropToCutline: whether keep the size of the input raster
+    :param nodata: set nodata value for the output raster
+    :param cropToCutline: whether not keep the size of the input raster
     :param srs: spatial reference system (default EPSG:4326)
     :param raster: file path of raster to be clipped
     :param input_shape: file path of the specific shape
@@ -21,12 +23,19 @@ def shape_warp_for_raster(raster: str, input_shape: str, out_raster,
     """
     src = raster_read(raster, open_type)
     try:
-        gdal.Warp(out_raster, src,
-                  format="GTiff",
-                  cutlineDSName=input_shape,
-                  cropToCutline=cropToCutline,
-                  dstSRS=srs,
-                  dstNodata=0)
+        if nodata is None:
+            gdal.Warp(out_raster, src,
+                      format="GTiff",
+                      cutlineDSName=input_shape,
+                      cropToCutline=cropToCutline,
+                      dstSRS=srs)
+        else:
+            gdal.Warp(out_raster, src,
+                      format="GTiff",
+                      cutlineDSName=input_shape,
+                      cropToCutline=cropToCutline,
+                      dstSRS=srs,
+                      dstNodata=nodata)
     except Exception as e:
         print(f"{e}\nSomething wrong in the wrapping")
     finally:
@@ -86,25 +95,68 @@ def set_nodata(dataset: gdal.Dataset, nodata: int) -> None:
             print(f"can not set {nodata} as nodata for {i + 1} ：{e}")
 
 
-def reproject_image(input_ds: gdal.Dataset, width, height, bands: list = None, datatype=gdalconst.GDT_Float32,
-                    reference_projection: str = None, reproject_method: str = gdalconst.GRA_Bilinear) \
-        -> gdal.Dataset or typing.Generator:
-    input_proj = input_ds.GetProjection()
+def resample_image(input_ds: gdal.Dataset, width, height, bands: list = None,
+                   reference_projection: str = None,
+                   reproject_method: str = gdalconst.GRA_Bilinear,
+                   reproject_function: str = "ReprojectImage",
+                   input_file_path: str = None,
+                   output_dir: str = None,
+                   return_ds: bool = True) -> gdal.Dataset or typing.Generator or None:
+    """
+    resample image :param input_ds: input dataset :param width: the resample width :param height: the resample height
+    :param bands: the resample bands :param reference_projection: reference projection :param reproject_method:
+    resample method (using gdalconst for meeting) :param reproject_function: using ReprojectImage method or Warp
+    method :param input_file_path: a str path needed while using Warp method :param output_dir: an output directory
+    path when selecting False at return ds :param return_ds: whether to return a gdal dataset or a file as image
+    :return: a gdal dataset or a generator generating dataset with information of specific band or None meaning get
+    an image file
+    """
     driver = gdal.GetDriverByName('GTiff')
+    input_proj = input_ds.GetProjection()
     temp_path = r"..\temp.tif"
-    if bands is None:
-        n_bands = input_ds.RasterCount
-        output_ds = driver.Create(temp_path, width, height, n_bands, etype=datatype)
-        gdal.ReprojectImage(input_ds, output_ds, input_proj, reference_projection, reproject_method)
-        os.remove(temp_path)
-        return output_ds
-    else:
-        n_bands = bands
-        output_ds = driver.Create(temp_path, width, height, 1, etype=datatype)
-        for i in n_bands:
-            input_band = input_ds.GetRasterBand(i + 1)
-            gdal.ReprojectImage(input_band, output_ds, input_proj, reference_projection, reproject_method)
-            yield output_ds
+    input_ref_band: gdal.Band = input_ds.GetRasterBand(1)
+    datatype = input_ref_band.DataType
+    if reproject_function == "ReprojectImage":
+        if bands is None:
+            n_bands = input_ds.RasterCount
+            if return_ds:
+                output_ds = driver.Create(temp_path, width, height, n_bands, etype=datatype)
+                gdal.ReprojectImage(input_ds, output_ds, input_proj, reference_projection, reproject_method)
+                os.remove(temp_path)
+                return output_ds
+            else:
+                if output_dir is None:
+                    raise ValueError("output_dir cannot be None")
+                output_ds = driver.Create(output_dir, width, height, n_bands, etype=datatype)
+                gdal.ReprojectImage(input_ds, output_ds, input_proj, reference_projection, reproject_method)
+                output_ds.FlushCache()
+                print("Reproject Done")
+        else:
+            n_bands = bands
+            output_ds = driver.Create(temp_path, width, height, 1, etype=datatype)
+            for i in n_bands:
+                input_band = input_ds.GetRasterBand(i + 1)
+                gdal.ReprojectImage(input_band, output_ds, input_proj, reference_projection, reproject_method)
+                yield output_ds
+    elif reproject_function == "Warp":
+        print("file path (str) is required when using Warp function")
+        input_file_path = input_file_path
+        if bands is None:
+            n_bands = input_ds.RasterCount
+            output_ds = driver.Create(temp_path, width, height, n_bands, etype=datatype)
+            options = gdal.WarpOptions(srcSRS=input_proj, dstSRS=input_proj, resampleAlg=reproject_method)
+            if return_ds:
+                gdal.Warp(temp_path, input_file_path, options=options)
+                out_ds = gdal.Open(temp_path)
+                return out_ds
+            else:
+                if output_dir is None:
+                    raise ValueError("output_dir cannot be None")
+                gdal.Warp(output_dir, input_file_path, options=options)
+                print("Warp Resample Done")
+        else:
+            raise ("Please using Reproject function to get a generator for dataset\n"
+                   "warp function has no development for this function")
 
 
 if __name__ == '__main__':
@@ -162,5 +214,5 @@ if __name__ == '__main__':
     # for file in file_list:
     #     ds = gdal.Open(file, gdal.GA_Update)
     #     set_nodata(ds, -9999)
-    ds = gdal.Open(r"D:\Drawing\output\test.tif", gdal.GA_Update)
+    ds = gdal.Open(r"D:\Drawing\output\output_map_2018.tif", gdal.GA_Update)
     set_nodata(ds, -1)

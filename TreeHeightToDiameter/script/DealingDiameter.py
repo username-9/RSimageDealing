@@ -17,7 +17,7 @@ if __name__ == '__main__':
         (701000, 702000, 703000, 704000, 705000, 706000, 707000,
          709000, 749000, 769000, 755000, 799000): TreeFunction.GuoShuLei
     }
-    file_path = r"C:\Users\PZH\Desktop\三区单木碳储量\dfq_13m_tree.shp"
+    file_path = r"C:\Users\PZH\Desktop\江苏项目\节点结果\三区单木碳储量-算\tsq_109m_tree.shp"
     datasource = vector_read(file_path, 1)
     # find_condition = f"YOU_SHI_SZ = {i}"
     # layer = find_attribution(datasource, find_condition)
@@ -35,17 +35,18 @@ if __name__ == '__main__':
                 break
         return field_exists
 
-
-    if not check_field_exist("xj"):
+    xj_field = "xj_0724"
+    if not check_field_exist(xj_field):
         print("the field may not exist")
-        print(f"create field <xj>")
-        field_name = ogr.FieldDefn("xj", ogr.OFTReal)
+        print(f"create field <{xj_field}>")
+        field_name = ogr.FieldDefn(xj_field, ogr.OFTReal)
         if layer.CreateField(field_name) != 0:
             raise Exception(f"Failed to create field {field_name}")
-    if not check_field_exist("tcl"):
+    tcl_field = "tcl_0724"
+    if not check_field_exist(tcl_field):
         print("the field may not exist")
-        print(f"create field <tcl>")
-        field_name = ogr.FieldDefn("tcl", ogr.OFTReal)
+        print(f"create field <{tcl_field}>")
+        field_name = ogr.FieldDefn(tcl_field, ogr.OFTReal)
         if layer.CreateField(field_name) != 0:
             raise Exception(f"Failed to create field {field_name}")
     feature: ogr.Feature = layer.GetNextFeature()
@@ -79,14 +80,14 @@ if __name__ == '__main__':
                 tree.calculate_dia()
                 xj = tree.diameter
                 try:
-                    feature.SetField("xj", xj)
+                    feature.SetField(xj_field, xj)
                 except Exception as e:
                     print(e)
                 if xj is not None:
                     tcl = cal_function.calculate_carbon(tree, co_tuple[0], co_tuple[1],
                                                         co_tuple[2], co_tuple[3], co_tuple[4])
                     try:
-                        feature.SetField("TCL", tcl)
+                        feature.SetField(tcl_field, tcl)
                     except Exception as e:
                         print(e)
         layer.SetFeature(feature)

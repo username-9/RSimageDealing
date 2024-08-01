@@ -86,7 +86,11 @@ class YangShu(Trees):
 
     def calculate_dia(self):
         if self.height is not None:
-            self.diameter = ((self.height + 0.0988) / 2.7536) ** (3 / 2)
+            # self.diameter = ((self.height + 0.0988) / 2.7536) ** (3 / 2)
+            if self.height > 10.172:
+                self.diameter = (self.height - 4.24) / 0.285
+            if self.height <= 10.172:
+                self.diameter = math.e ** ((self.height + 2.83996385) / 4.286402402)
 
     @staticmethod
     def calculate_area_carbon(F_array: np.ndarray, Slope_array: np.ndarray, H_array: np.ndarray):
@@ -103,10 +107,14 @@ class ZhangShu(Trees):
         super().__init__(height, diameter)
 
     def calculate_dia(self):
-        if self.height > 10.3:
-            self.diameter = (self.height - 9.0409) / 0.1239
-        else:
-            self.diameter = math.e ** ((self.height - 6.228) / 1.757)
+        # if self.height > 10.3:
+        #     self.diameter = (self.height - 9.0409) / 0.1239
+        # else:
+        #     self.diameter = math.e ** ((self.height - 6.228) / 1.757)
+        if self.height > 10.369:
+            self.diameter = (self.height - 3.678181818) / 0.347121212
+        if self.height <= 10.369:
+            self.diameter = math.e ** ((self.height + 3.36603468) / 4.642026185)
 
     @staticmethod
     def calculate_area_carbon(F_array: np.ndarray, Slope_array: np.ndarray, H_array: np.ndarray):
@@ -133,7 +141,8 @@ class GuoShuLei(Trees):
 
     def calculate_dia(self):
         if self.height is not None:
-            self.diameter = (self.height - 0.738773) / 0.234835
+            # self.diameter = (self.height - 0.738773) / 0.234835
+            self.diameter = (0.6810857 * (self.height ** 0.38265)) ** 5.033219
 
     @staticmethod
     def calculate_area_carbon(F_array: np.ndarray, Slope_array: np.ndarray, H_array: np.ndarray):

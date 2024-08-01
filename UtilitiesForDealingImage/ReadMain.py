@@ -122,6 +122,28 @@ def read_band_scale_offset(ds: gdal.Dataset, bands: list = None):
             print(f"{e}\nSome wrongs happened in reading band information")
 
 
+def get_raster_nodata(ds: gdal.Dataset, bands: list = None):
+    nodata = []
+    if bands is None:
+        try:
+            for i in range(ds.RasterCount):
+                ds_band: gdal.Band = ds.GetRasterBand(i + 1)
+                nodata = ds_band.GetNoDataValue()
+                del ds_band
+            return nodata
+        except Exception as e:
+            print(f"{e}\ngetting all band nodata information false")
+    else:
+        try:
+            for i in bands:
+                ds_band = ds.GetRasterBand(i)
+                nodata = ds_band.GetNoDataValue()
+                del ds_band
+            return nodata
+        except Exception as e:
+            print(f"{e}\nSome wrongs happened in getting defined bands information")
+
+
 if __name__ == '__main__':
     _src = raster_read(r"C:\Users\Administrator\Downloads\MYDLT1F.20140601.CN.LTN.MAX.V2.TIF")
     del _src
