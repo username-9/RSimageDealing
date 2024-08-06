@@ -95,24 +95,33 @@ def set_nodata(dataset: gdal.Dataset, nodata: int) -> None:
             print(f"can not set {nodata} as nodata for {i + 1} ：{e}")
 
 
-def resample_image(input_ds: gdal.Dataset, width, height, bands: list = None,
+def resample_image(input_ds: gdal.Dataset or None, width: int or float, height: int or float,
                    reference_projection: str = None,
                    reproject_method: str = gdalconst.GRA_Bilinear,
                    reproject_function: str = "ReprojectImage",
                    input_file_path: str = None,
                    output_dir: str = None,
-                   return_ds: bool = True) -> gdal.Dataset or typing.Generator or None:
+                   return_ds: bool = True,
+                   bands: list = None,) -> gdal.Dataset or typing.Generator or None:
     """
-    resample image :param input_ds: input dataset :param width: the resample width :param height: the resample height
-    :param bands: the resample bands :param reference_projection: reference projection :param reproject_method:
-    resample method (using gdalconst for meeting) :param reproject_function: using ReprojectImage method or Warp
-    method :param input_file_path: a str path needed while using Warp method :param output_dir: an output directory
-    path when selecting False at return ds :param return_ds: whether to return a gdal dataset or a file as image
+    resample image
+    :param input_ds: input dataset
+    :param width: the resample width
+    :param height: the resample height
+    :param bands: the resample bands
+    :param reference_projection: reference projection
+    :param reproject_method: resample method (using gdalconst for meeting)
+    :param reproject_function: using ReprojectImage method or Warp method
+    :param input_file_path: a str path needed while using Warp method
+    :param output_dir: an output directory path when selecting False at return ds
+    :param return_ds: whether to return a gdal dataset or a file as image
     :return: a gdal dataset or a generator generating dataset with information of specific band or None meaning get
     an image file
     """
     driver = gdal.GetDriverByName('GTiff')
     input_proj = input_ds.GetProjection()
+    if reference_projection is not None:
+        input_proj = reference_projection
     temp_path = r"..\temp.tif"
     input_ref_band: gdal.Band = input_ds.GetRasterBand(1)
     datatype = input_ref_band.DataType
@@ -127,7 +136,11 @@ def resample_image(input_ds: gdal.Dataset, width, height, bands: list = None,
             else:
                 if output_dir is None:
                     raise ValueError("output_dir cannot be None")
-                output_ds = driver.Create(output_dir, width, height, n_bands, etype=datatype)
+                else:
+                    if input_file_path is None:
+                        raise ValueError("input_file_path cannot be None")
+                output_path = os.path.join(output_dir, os.path.basename(input_file_path))
+                output_ds = driver.Create(output_path, width, height, n_bands, etype=datatype)
                 gdal.ReprojectImage(input_ds, output_ds, input_proj, reference_projection, reproject_method)
                 output_ds.FlushCache()
                 print("Reproject Done")
@@ -152,7 +165,8 @@ def resample_image(input_ds: gdal.Dataset, width, height, bands: list = None,
             else:
                 if output_dir is None:
                     raise ValueError("output_dir cannot be None")
-                gdal.Warp(output_dir, input_file_path, options=options)
+                output_path = os.path.join(output_dir, os.path.basename(input_file_path))
+                gdal.Warp(output_path, input_file_path, options=options)
                 print("Warp Resample Done")
         else:
             raise ("Please using Reproject function to get a generator for dataset\n"
