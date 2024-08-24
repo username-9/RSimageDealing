@@ -96,15 +96,17 @@ def set_nodata(dataset: gdal.Dataset, nodata: int) -> None:
 
 
 def resample_image(input_ds: gdal.Dataset or None, width: int or float, height: int or float,
+                   reference_transform: str = None,
                    reference_projection: str = None,
                    reproject_method: str = gdalconst.GRA_Bilinear,
                    reproject_function: str = "ReprojectImage",
                    input_file_path: str = None,
                    output_dir: str = None,
                    return_ds: bool = True,
-                   bands: list = None,) -> gdal.Dataset or typing.Generator or None:
+                   bands: list = None) -> gdal.Dataset or None:
     """
     resample image
+    :param reference_transform: reference transform
     :param input_ds: input dataset
     :param width: the resample width
     :param height: the resample height
@@ -112,7 +114,7 @@ def resample_image(input_ds: gdal.Dataset or None, width: int or float, height: 
     :param reference_projection: reference projection
     :param reproject_method: resample method (using gdalconst for meeting)
     :param reproject_function: using ReprojectImage method or Warp method
-    :param input_file_path: a str path needed while using Warp method
+    :param input_file_path: a str path needed while using Warp method or using for name in ReprojectImage method
     :param output_dir: an output directory path when selecting False at return ds
     :param return_ds: whether to return a gdal dataset or a file as image
     :return: a gdal dataset or a generator generating dataset with information of specific band or None meaning get
@@ -120,8 +122,11 @@ def resample_image(input_ds: gdal.Dataset or None, width: int or float, height: 
     """
     driver = gdal.GetDriverByName('GTiff')
     input_proj = input_ds.GetProjection()
+    input_trans = input_ds.GetGeoTransform()
     if reference_projection is not None:
         input_proj = reference_projection
+    if reference_transform is not None:
+        input_trans = reference_transform
     temp_path = r"..\temp.tif"
     input_ref_band: gdal.Band = input_ds.GetRasterBand(1)
     datatype = input_ref_band.DataType
@@ -129,7 +134,7 @@ def resample_image(input_ds: gdal.Dataset or None, width: int or float, height: 
         if bands is None:
             n_bands = input_ds.RasterCount
             if return_ds:
-                output_ds = driver.Create(temp_path, width, height, n_bands, etype=datatype)
+                output_ds = driver.Create(temp_path, width, height, n_bands, eType=datatype)
                 gdal.ReprojectImage(input_ds, output_ds, input_proj, reference_projection, reproject_method)
                 os.remove(temp_path)
                 return output_ds
@@ -140,17 +145,14 @@ def resample_image(input_ds: gdal.Dataset or None, width: int or float, height: 
                     if input_file_path is None:
                         raise ValueError("input_file_path cannot be None")
                 output_path = os.path.join(output_dir, os.path.basename(input_file_path))
-                output_ds = driver.Create(output_path, width, height, n_bands, etype=datatype)
+                output_ds = driver.Create(output_path, width, height, n_bands, eType=datatype)
+                output_ds.SetGeoTransform(input_trans)
+                output_ds.SetProjection(input_proj)
                 gdal.ReprojectImage(input_ds, output_ds, input_proj, reference_projection, reproject_method)
                 output_ds.FlushCache()
                 print("Reproject Done")
         else:
-            n_bands = bands
-            output_ds = driver.Create(temp_path, width, height, 1, etype=datatype)
-            for i in n_bands:
-                input_band = input_ds.GetRasterBand(i + 1)
-                gdal.ReprojectImage(input_band, output_ds, input_proj, reference_projection, reproject_method)
-                yield output_ds
+            print("no developed,please do out domain")
     elif reproject_function == "Warp":
         print("file path (str) is required when using Warp function")
         input_file_path = input_file_path
@@ -228,5 +230,22 @@ if __name__ == '__main__':
     # for file in file_list:
     #     ds = gdal.Open(file, gdal.GA_Update)
     #     set_nodata(ds, -9999)
-    ds = gdal.Open(r"D:\Drawing\output\output_map_2018.tif", gdal.GA_Update)
-    set_nodata(ds, -1)
+
+    # ds = gdal.Open(r"D:\Drawing\output\output_map_2018.tif", gdal.GA_Update)
+    # set_nodata(ds, -1)
+
+    # test reproject
+    file = r"D:\Data\VegetationResilienceDealing\Integrate_Output\LUCC(use)\LUCC_CLIP\CLCD_v01_2005_albert.tif"
+
+    ref_file = r"D:\Data\VegetationResilienceDealing\Integrate_Output\LUCC(use)\LUCC_CLIP\CLCD_v01_2000_albert.tif"
+
+    ref_ds: gdal.Dataset = gdal.Open(ref_file)
+    width = ref_ds.RasterXSize
+    height = ref_ds.RasterYSize
+    ref_trans = ref_ds.GetGeoTransform()
+    in_ds = gdal.Open(file)
+
+    out_dir = r"D:\Data\VegetationResilienceDealing\Integrate_Output\LUCC(use)"
+    resample_image(in_ds, width, height, output_dir=out_dir,
+                   return_ds=False, reproject_method=gdal.GRA_NearestNeighbour,
+                   input_file_path=file, reference_transform=ref_trans)
