@@ -21,7 +21,7 @@ from UtilitiesForDealingImage.UtilityFunction import workdir_filelist
 
 
 if __name__ == "__main__":
-    work_path = r"D:\Data\VegetationResilienceDealing\Integrate_Output\LUCC(use)\LUCC_CLIP"
+    work_path = r"D:\Data\VegetationResilienceDealing\Integrate_Output\LUCC(use)\LUCC_S_CONSTRUCT"
     filelist = workdir_filelist(work_path)
     out_dir = r"D:\Data\VegetationResilienceDealing\Integrate_Output\LUCC(use)\LUCC_RESAMPLE"
     # ref tif
