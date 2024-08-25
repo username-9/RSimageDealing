@@ -2,7 +2,6 @@ import json
 from multiprocessing import Pool
 
 import openpyxl
-import numpy as np
 from osgeo import gdal
 import os
 
