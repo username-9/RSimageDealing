@@ -1,5 +1,6 @@
 import os
 import typing
+from time import sleep
 
 from osgeo import gdal, gdalconst
 
@@ -51,7 +52,7 @@ def image_mosaic(input_file_path: list[str], output_file_path: str) -> None:
     :return: None
     """
     try:
-        vrt = os.path.join(os.path.split(output_file_path)[0], "vrt.tif")
+        vrt = os.path.join(os.path.split(output_file_path)[0], "vrt(" + str(os.getpid()) + ").tif")
         gdal.BuildVRT(vrt,
                       input_file_path,
                       hideNodata=True)

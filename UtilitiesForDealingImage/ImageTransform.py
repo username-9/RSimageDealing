@@ -9,9 +9,12 @@ from UtilitiesForDealingImage.WriteMain import array_to_raster
 from UtilitiesForDealingImage.ImageProcessing import set_nodata
 
 
-def hdf_to_tiff(input_file_path: str, output_file_dir: str, sub_datasets_num: int, data_type) -> None:
+def hdf_to_tiff(input_file_path: str, output_file_dir: str,
+                sub_datasets_num: int, data_type, hdf_no_value_data=None, tif_no_value_data=None) -> None:
     """
     transform the hdf file to tiff file in a list of batch
+    :param tif_no_value_data: set no value data for tiff file
+    :param hdf_no_value_data: hdf file no value data
     :param input_file_path: hdf file path
     :param output_file_dir: output tiff file path
     :param sub_datasets_num: the index of sub-dataset in dataset
@@ -28,6 +31,11 @@ def hdf_to_tiff(input_file_path: str, output_file_dir: str, sub_datasets_num: in
         scale, offset = read_band_scale_offset(sub_data)
         array = sub_data.ReadAsArray(buf_type=data_type)
         output_file_path = os.path.join(output_file_dir, f"{input_file_path[:-3]}_layer_{sub_datasets_num + 1}.tif")
+        if hdf_no_value_data is not None:
+            if tif_no_value_data is None:
+                array[array > hdf_no_value_data] = 0
+            else:
+                array[array == hdf_no_value_data] = tif_no_value_data
         array_to_raster(array, output_file_path, geo_transform,
                         projection, data_type=data_type, scale=scale, offset=offset)
         print("transform done")

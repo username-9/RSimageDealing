@@ -46,7 +46,7 @@ def array_to_raster(array: np.ndarray,
         render_geo.FlushCache()
         del render_geo
     except Exception as e:
-        raise f"{e}\nSome error in transforming image"
+        raise f"{e}\nSome error in transforming image" from e
 
 
 def raster_write(file_path, image_array, projection, geo_transform,
@@ -98,17 +98,21 @@ def set_band_scale_offset(ds: gdal.Dataset, scale: list = None, offset: list = N
         for i in range(ds.RasterCount):
             band = ds.GetRasterBand(i + 1)
             if scale is not None:
-                band.SetScale(scale[i])
+                if scale[i] is not None:
+                    band.SetScale(float(scale[i]))
             if offset is not None:
-                band.SetOffset(offset[i])
+                if offset[i] is not None:
+                    band.SetOffset(offset[i])
             del band
     else:
         for i in range(len(bands)):
             band = ds.GetRasterBand(bands[i])
             if scale is not None:
-                band.SetScale(scale[i])
+                if scale[i] is not None:
+                    band.SetScale(float(scale[i]))
             if offset is not None:
-                band.SetOffset(offset[i])
+                if offset[i] is not None:
+                    band.SetOffset(offset[i])
             del band
     ds.FlushCache()
     print("set scale and offset done")

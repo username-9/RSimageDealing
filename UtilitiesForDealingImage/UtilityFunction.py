@@ -58,7 +58,7 @@ def integrate_monthly(_file_list: list, str_year_start: int, str_year_end: int,
     #integrate img into one
     #be cautious that the function needs to set year and day from the name of file
     :param str_day_end: the index of file name string where the year begin
-    :param str_year_end: the index of file name string where the year in end
+    :param str_year_end: the index of file name string where the year in end in range()
     :param str_year_start: the index of file name string where the year at begin
     :param str_day_start: the index of file name string where the day in end
     :param _file_list: img file name list
