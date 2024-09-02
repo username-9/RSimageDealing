@@ -9,7 +9,7 @@ from UtilitiesForDealingImage.UtilityFunction import workdir_filelist
 
 def para_cal(input_file):
     print(f"---PID: {os.getpid()}---\n---Dealing with {input_file}---")
-    file_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\Rm_USING_UNIT_PERCENT"
+    file_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\Rm_mean"
     file_list = os.listdir(file_dir)
     for file in file_list:
         if not file.endswith(".tif"):
@@ -17,11 +17,12 @@ def para_cal(input_file):
     index = file_list.index(input_file)
 
     # GPP directory
-    gpp_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\GPP\GPP_INTEGRATE_OUTPUT_MEAN_CLIP"
+    gpp_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\GPP\GPP_INTEGRATE_OUTPUT_MEAN_0830_CLIP"
     gpp_list = os.listdir(gpp_dir)
     for file in gpp_list:
         if not file.endswith(".tif"):
             gpp_list.remove(file)
+    print(f"gpp file : {gpp_list[index + 1]}\nRm file : {input_file}")
 
     # get gpp array and basement construction information
     gpp_path = os.path.join(gpp_dir, gpp_list[index + 1])
@@ -41,7 +42,7 @@ def para_cal(input_file):
     del rm_ds
 
     # construct NPP raster
-    output_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\NPP_MEAN_DAY"
+    output_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\NPP_MEAN_DAY_0830"
     npp_path = os.path.join(output_dir, "npp_" + os.path.basename(input_file)[3:])
     driver = gdal.GetDriverByName('GTiff')
     npp_ds: gdal.Dataset = driver.Create(npp_path, ds_width, ds_height, bands=ds_band_num, eType=gdal.GDT_Float64)
@@ -49,7 +50,7 @@ def para_cal(input_file):
     npp_ds.SetProjection(ds_proj)
 
     # calculate npp array
-    gpp_array = gpp_array.astype(np.float64)
+    # gpp_array = gpp_array * 0.0001 # scale has been handled
     rm_array = rm_array.astype(np.float64)
     rg_array = (gpp_array - rm_array) * 0.25
     npp_array = gpp_array - rm_array - rg_array
@@ -62,7 +63,7 @@ def para_cal(input_file):
 
 
 if __name__ == "__main__":
-    work_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\Rm_USING_UNIT_PERCENT"
+    work_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\Rm_mean"
     file_ls = workdir_filelist(work_dir)
 
     with Pool(processes=5) as pool:

@@ -4,6 +4,7 @@ from typing import Generator, Callable
 
 import numpy as np
 import psutil
+from PIL.ImageOps import scale
 from osgeo import gdal
 
 from UtilitiesForDealingImage.ReadMain import read_band_scale_offset
@@ -205,13 +206,25 @@ class ImageBlock:
             out_ds = gdal.Open(output_file_path, gdal.GA_Update)
         else:
             if write_data_type is None:
-                out_ds: gdal.Dataset = driver.Create(output_file_path, self.image_width,
+                if arr.ndim <= 2:
+                    out_ds: gdal.Dataset = driver.Create(output_file_path, self.image_width,
+                                                         self.image_height, bands=1)
+                else:
+                    out_ds: gdal.Dataset = driver.Create(output_file_path, self.image_width,
                                                      self.image_height, bands=arr.shape[0])
             else:
-                out_ds: gdal.Dataset = driver.Create(output_file_path, self.image_width,
+                if arr.ndim <= 2:
+                    out_ds: gdal.Dataset = driver.Create(output_file_path, self.image_width,
+                                                         self.image_height, bands=1)
+                else:
+                    out_ds: gdal.Dataset = driver.Create(output_file_path, self.image_width,
                                                      self.image_height, eType=write_data_type, bands=arr.shape[0])
             out_ds.SetGeoTransform(self.geo_transform)
             out_ds.SetProjection(self.proj)
+            if len(self.scale) != arr.ndim or len(self.offset) != arr.ndim:
+                Warning("scale or offset is different from the origin")
+                self.scale = [1 for i in range(arr.ndim)]
+                self.offset = [0 for i in range(arr.ndim)]
             set_band_scale_offset(out_ds, self.scale, self.offset)
         out_ds.WriteArray(arr, x_pos, y_pos)
         out_ds.FlushCache()

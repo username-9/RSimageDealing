@@ -36,10 +36,8 @@ def function_format(x, a, b):
 
 if __name__ == "__main__":
     # set directory
-    npp_verify_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\REF_NPP\NPP_V_MEAN_DAY_0830_RESAMPLE"
-    npp_ref_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\REF_NPP\REF_NPP_INTEGRATE"  # REF NPP Clip First
-
-    output_dir = r""
+    npp_verify_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\REF_NPP\NPP_ANNUAL_INTEGRATE"
+    npp_ref_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\REF_NPP\REF_NPP_ANNUAL\CLIP"
 
     # get file
     npp_verify_ls = get_file_ls(npp_verify_dir)
@@ -47,9 +45,9 @@ if __name__ == "__main__":
 
     # get ref value and verify value
     verify_array = []
-    if not os.path.exists("VerifyArray/VerifyArray.npy"):
+    if not os.path.exists("VerifyArray/VerifyArray_a.npy"):
         verify_temp = None
-        for npp_v in tqdm(npp_verify_ls, total=len(npp_ref_dir)):
+        for npp_v in tqdm(npp_verify_ls, total=len(npp_verify_ls)):
             index = npp_verify_ls.index(npp_v)
             if index >= len(npp_ref_ls):
                 break
@@ -61,19 +59,19 @@ if __name__ == "__main__":
             npp_r_ds: gdal.Dataset = gdal.Open(os.path.join(npp_ref_dir, npp_r))
             npp_r_array = npp_r_ds.ReadAsArray()
             del npp_r
-            npp_r_one_a = npp_r_array.ravel() / 100
-            npp_v_one_a = npp_v_array.ravel() * 1000
+            npp_r_one_a = npp_r_array.ravel() * 0.0001
+            npp_v_one_a = npp_v_array.ravel()
             verify_temp = np.column_stack((npp_r_one_a, npp_v_one_a))
             verify_array.append(verify_temp)
         verify_array = np.array(verify_array)
-        np.save("VerifyArray/VerifyArray.npy", verify_array)
+        np.save("VerifyArray/VerifyArray_a.npy", verify_array)
     else:
-        verify_array = np.load("VerifyArray/VerifyArray.npy")
+        verify_array = np.load("VerifyArray/VerifyArray_a.npy")
 
     # pre-dealing for data
     static_array = np.concatenate(verify_array, axis=0)
-    # filtered_array = static_array[~(np.any(static_array == 0, axis=1))]
     filtered_array = static_array[~(np.any(static_array == 0, axis=1))]
+    # filtered_array = static_array[~(static_array[:, 1] == 0)]
     # calculate the RMSE
     array_x = filtered_array[:, 0]
     array_y = filtered_array[:, 1]

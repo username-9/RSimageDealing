@@ -69,6 +69,6 @@ if __name__ == "__main__":
         r_2 = r2_score(array_x, array_y)
         print(f"RMSE: {rmse}\nMAE: {mae}\nMSE: {mse}\nR-2 Score: {r_2}\nRelative RMSE:{r_rmse}")
         # plot scatter
-        scatter(array_x, array_y, function_format, ci=50)
+        scatter(array_x, array_y, ci=50)
     else:
         print("There is no class 2")

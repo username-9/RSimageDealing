@@ -64,7 +64,7 @@ def get_specific_lucc_dict():
 
     # construct ref dictionary
     ref_dict = {}
-    json_path = r"C:\Users\PZH\PycharmProjects\RSimageDealing\VegetationResilience\lut.json"
+    json_path = r"/VegetationResilience/REF_File/lut.json"
     if os.path.exists(json_path):
         with open(json_path, 'r') as f:
             ref_dict = json.load(f)

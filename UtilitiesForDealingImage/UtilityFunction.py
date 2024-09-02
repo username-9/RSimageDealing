@@ -1,12 +1,8 @@
 import os
 from datetime import datetime, timedelta
-
 import numpy as np
 from dateutil.relativedelta import relativedelta
-
 from osgeo import ogr, gdal, gdal_array
-
-from UtilitiesForDealingImage.ReadMain import raster_read
 
 
 def month_of_day_in_year(_year: int, _day: int) -> int:
@@ -53,10 +49,11 @@ def start_and_end_day_of_month(_year: int, _month: int) -> tuple[int, int] or No
 
 
 def integrate_monthly(_file_list: list, str_year_start: int, str_year_end: int,
-                      str_day_start: int, str_day_end: int) -> tuple[dict, dict]:
+                      str_day_start: int, str_day_end: int, file_format: str = "GTIFF") -> tuple[dict, dict]:
     """
     #integrate img into one
     #be cautious that the function needs to set year and day from the name of file
+    :param file_format: which kind of file in the file list
     :param str_day_end: the index of file name string where the year begin
     :param str_year_end: the index of file name string where the year in end in range()
     :param str_year_start: the index of file name string where the year at begin
@@ -67,6 +64,9 @@ def integrate_monthly(_file_list: list, str_year_start: int, str_year_end: int,
     # get the iterate index from file list
     integrate_index_dict = {}
     weight_dict = {}
+    for file in _file_list:
+        if not file.endswith('.tif'):
+            raise ValueError from BaseException
     for filename in _file_list:
         year = int(filename[str_year_start:str_year_end])
         day = int(filename[str_day_start:str_day_end])
@@ -76,19 +76,33 @@ def integrate_monthly(_file_list: list, str_year_start: int, str_year_end: int,
         # get start and end day of the month
         start_day, end_day = start_and_end_day_of_month(year, month)
         # check the period whether in the month and set weight
-        if day != start_day and (day - 8) < start_day:
-            integrate_index_dict.setdefault(year_month_str, []).insert(0, _file_list.index(filename) - 1)
-            weight_last = (start_day - (day - 8)) / 8
-            weight_dict.setdefault(year_month_str, []).insert(0, weight_last)
-            weight_this = (day - start_day) / 8
-            weight_dict.setdefault(year_month_str, []).append(weight_this)
-        elif day - 8 > start_day and (end_day - (day + 7)) < end_day:
-            weight_dict.setdefault(year_month_str, []).append(1)
-        elif (day + 7) > end_day:
-            weight_this = (end_day - day) / 8
-            weight_dict.setdefault(year_month_str, []).append(weight_this)
-        else:
-            weight_dict.setdefault(year_month_str, []).append(1)
+        # if day != start_day and (day - 8) < start_day:
+        #     integrate_index_dict.setdefault(year_month_str, []).insert(0, _file_list.index(filename) - 1)
+        #     weight_last = (start_day - (day - 8)) / 8
+        #     weight_dict.setdefault(year_month_str, []).insert(0, weight_last)
+        #     weight_this = (day - start_day) / 8
+        #     weight_dict.setdefault(year_month_str, []).append(weight_this)
+        # elif (day - 8 > start_day) and ((end_day - (day + 7)) < end_day):
+        #     weight_dict.setdefault(year_month_str, []).append(1)
+        # elif (day + 7) > end_day:
+        #     weight_this = (end_day - day) / 8
+        #     weight_dict.setdefault(year_month_str, []).append(weight_this)
+        # else:
+        #     weight_dict.setdefault(year_month_str, []).append(1)
+        if start_day <= day <= end_day:
+            if (_file_list.index(filename) != 0) and (day - 8 < start_day):
+                # Handle start of month case
+                integrate_index_dict.setdefault(year_month_str, []).insert(0, _file_list.index(filename) - 1)
+                weight_this = (day - start_day) / 8
+                weight_dict.setdefault(year_month_str, []).append(weight_this)
+                weight_dict.setdefault(year_month_str, []).append(1)
+            elif day + 7 > end_day:
+                # Handle end of month case
+                weight_this = (end_day - day + 1) / 8
+                weight_dict.setdefault(year_month_str, []).append(weight_this)
+            else:
+                # Handle mid-month case
+                weight_dict.setdefault(year_month_str, []).append(1)
     return integrate_index_dict, weight_dict
 
 

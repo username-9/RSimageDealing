@@ -25,7 +25,7 @@ def get_year_para_array(directory, year_i):
 def para_cal(file_path):
     ref_dict = get_specific_lucc_dict()
     # set directory
-    out_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\Rm_USING_UNIT_PERCENT"
+    out_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\Rm_mean"
 
     lai_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\LAI\LAI_BTH_CLIP"
 
@@ -61,7 +61,7 @@ def para_cal(file_path):
             lai_list.remove(filename)
     lai_ds = gdal.Open(os.path.join(lai_dir, lai_list[i]))
     lai_array = lai_ds.GetRasterBand(1).ReadAsArray()
-    # lai_array = lai_array * 0.01  # IS IT USING UNIT %
+    lai_array = lai_array * 0.1  # LAI scale
     del lai_ds
 
     tmp_ds = gdal.Open(os.path.join(tmp_dir, file_path), gdal.GA_ReadOnly)
@@ -105,6 +105,7 @@ def para_cal(file_path):
                     m1 = lai_array[i, j] / sla
                     m2 = m1 / (1 + y_array[i, j])
                     m3 = m2 * y_array[i, j]
+                    # there's another algorithm to exchange 2
                     temp_co = 2 ** ((tmp_array[i, j] - 20) / 10)
                     r1 = m1 * r_leaf_array[i, j] * temp_co
                     r2 = m2 * r_stem_array[i, j] * temp_co
@@ -115,7 +116,7 @@ def para_cal(file_path):
                     rm_array[i, j] = 0
                 else:
                     rm_array[i, j] = (lai_array[i, j] / sla_array[i, j]) * 0.5 * (2 ** ((tmp_array[i, j] - 20) / 10))
-    rm_array = rm_array * day_of_month
+    # rm_array = rm_array * day_of_month
     rm_ds.WriteArray(rm_array)
     rm_ds.FlushCache()
     del rm_ds

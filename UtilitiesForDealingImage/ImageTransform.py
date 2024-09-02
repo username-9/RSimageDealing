@@ -1,8 +1,9 @@
 import os
 
 import numpy as np
-from osgeo import gdal, osr
+from osgeo import gdal, osr, gdalconst
 import netCDF4 as nc
+from tqdm import tqdm
 
 from UtilitiesForDealingImage.ReadMain import hdf_read, read_band_scale_offset
 from UtilitiesForDealingImage.WriteMain import array_to_raster
@@ -135,3 +136,27 @@ def nc_to_tiff(input_file_path: str, output_file_dir: str,
                 ds = gdal.Open(output_path, gdal.GA_Update)
                 set_nodata(ds, nodata)
                 del ds
+
+
+def multiply_bands_to_band_raster(ds: gdal.Dataset, input_file_path: str, output_file_dir: str, axis = 0):
+    arr = ds.GetRasterBand(1).ReadAsArray()
+    ds_trans = ds.GetGeoTransform()
+    ds_proj = ds.GetProjection()
+    ds_width = ds.RasterXSize
+    ds_height = ds.RasterYSize
+    ds_datatype = ds.GetRasterBand(1).DataType
+    for i in tqdm(range(arr.shape[axis])):
+        out_path = os.path.join(output_file_dir, f"Band{i+1}.tif")
+        driver = gdal.GetDriverByName('GTiff')
+        band_ds: gdal.Dataset = driver.Create(out_path, ds_width, ds_height, bands=1,
+                                               eType=ds_datatype)
+        band_ds.SetGeoTransform(ds_trans)
+        band_ds.SetProjection(ds_proj)
+        band_array = None
+        if axis == 0:
+            band_array = arr[i, :, :]
+        else:
+            raise ValueError
+        band_ds.WriteArray(band_array)
+        band_ds.FlushCache()
+        del band_ds

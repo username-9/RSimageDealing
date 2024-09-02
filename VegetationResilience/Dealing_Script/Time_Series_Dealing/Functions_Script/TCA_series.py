@@ -38,15 +38,19 @@ def main_deal(_block_generator, _block, _time_window):
     print(f"{os.getpid()} process dealing with block: x: {_x_offset}, y: {_y_offset}, x_size: {x}, y_size: {y}")
 
 
+def para_cal():
+    pass
+
 if __name__ == '__main__':
-    os.chdir(r"C:\Users\PZH\Desktop\output_detrended")
+    os.chdir(r"F:\DATA\Vegetation_Resilience_D_DATA_C\0831_archive\TIME_SERIES_HANDLE\DETREND")
     file_list = os.listdir()
-    if os.path.exists(r"..\output_series_tac"):
+    out_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0831_archive\TIME_SERIES_HANDLE\TAC_Series"
+    if os.path.exists(out_dir):
         pass
     else:
-        os.mkdir(r"..\output_series_tac")
-    file_path = r"detrended_merge.tif"
-    output_file = os.path.join(r"..\output_series_tac", "tac_series.tif")
+        os.mkdir(out_dir)
+    file_path = r"detrended.tif"
+    output_file = os.path.join(out_dir, "tac_series.tif")
     time_window = 3
     block = UtilitiesForDealingImage.ImageBlock.ImageBlock(file_path, 300, 300)
     block_generator = block.read_by_generator()

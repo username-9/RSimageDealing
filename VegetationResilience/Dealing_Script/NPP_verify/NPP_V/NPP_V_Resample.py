@@ -18,9 +18,9 @@ from UtilitiesForDealingImage.UtilityFunction import workdir_filelist
 
 
 if __name__ == "__main__":
-    work_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\NPP_MEAN_DAY"
+    work_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\NPP_MEAN_DAY_0830"
     filelist = workdir_filelist(work_path)
-    out_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\REF_NPP\NPP_V_RESAMPLE"
+    out_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\REF_NPP\NPP_V_MEAN_DAY_0830_RESAMPLE"
     # ref tif
     ref = r"F:\DATA\Vegetation_Resilience_D_DATA_C\REF_NPP\REF_NPP_CLIP\MUSES.NPP.5km.2000001.Global.tif"
     gdal.AllRegister()
