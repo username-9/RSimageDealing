@@ -7,10 +7,10 @@ import numpy as np
 from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForDealingImage.ReadMain import raster_read, read_band_scale_offset
+from UtilitiesForProcessingImage.ReadMain import raster_read, read_band_scale_offset
 
-from UtilitiesForDealingImage import ImageBlock
-from UtilitiesForDealingImage.WriteMain import raster_write, set_band_scale_offset
+from UtilitiesForProcessingImage import ImageBlock
+from UtilitiesForProcessingImage.WriteMain import raster_write, set_band_scale_offset
 
 
 def drawing_by_block(dataset_1, dataset_2, location):

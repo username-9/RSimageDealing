@@ -4,7 +4,7 @@ from osgeo import ogr, osr
 from osgeo import gdal
 import os
 
-from UtilitiesForDealingImage.UtilityFunction import workdir_filelist
+from UtilitiesForProcessingImage.UtilityFunction import workdir_filelist
 
 
 def calculated_proportion(in_path1, in_path2, out_path):
