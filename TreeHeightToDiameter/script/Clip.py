@@ -2,8 +2,8 @@ import os
 
 from osgeo import gdal
 
-from UtilitiesForDealingImage.ImageProcessing import shape_warp_for_raster
-from UtilitiesForDealingImage.ReadMain import raster_read
+from UtilitiesForProcessingImage.ImageProcessing import shape_warp_for_raster
+from UtilitiesForProcessingImage.ReadMain import raster_read
 
 if __name__ == "__main__":
     file = r"C:\Users\PZH\Desktop\江苏项目\数据处理\output_cal_raster.tif"

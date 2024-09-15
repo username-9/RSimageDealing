@@ -6,38 +6,38 @@ import cv2
 from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForDealingImage.ReadMain import read_band_scale_offset, raster_read
-from UtilitiesForDealingImage.WriteMain import raster_write
+from UtilitiesForProcessingImage.ReadMain import read_band_scale_offset, raster_read
+from UtilitiesForProcessingImage.WriteMain import raster_write
 
 
-def double_link_color_map(map_x_data: np.ndarray, map_y_data: np.ndarray, two_dim_color_arr: np.ndarray,
-                          resize: bool = False, block_position: tuple = (0.1, 0.1, 1, 1)):
-    """
-    draw maps with double link color map
-    :param two_dim_color_arr: color block used for legend
-    :param block_position: color legend position
-    :param resize: whether to resize the factor map data
-    :param map_x_data: one of the factor in mapping (should be 2-dimensional array)
-    :param map_y_data: another factor in mapping (should be 2-dimensional array)
-    :param resize: resize the data by map_x_data
-    :return: a matplotlib color map
-    """
-    if resize:
-        map_y_data.resize(map_x_data.shape)
-    if map_x_data.shape == map_y_data.shape:
-        rows, cols, colors = two_dim_color_arr.shape
-        fig: plt.Figure = plt.figure(figsize=(rows, cols))
-        # draw main picture
-        ax_main = fig.add_subplot(projection=ccrs.Mollweide())
-        # ax_main.stock_img()
-        # ax_main.coastlines()
-        # draw legend picture
-        ax_legend = fig.add_axes(
-            (block_position[0], block_position[1], rows * block_position[2], cols * block_position[3]))
-        # ax_legend.imshow(two_dim_color_arr, cmap='viridis')
-        fig.show()
-    else:
-        raise ValueError("the size of data is not equal")
+# def double_link_color_map(map_x_data: np.ndarray, map_y_data: np.ndarray, two_dim_color_arr: np.ndarray,
+#                           resize: bool = False, block_position: tuple = (0.1, 0.1, 1, 1)):
+#     """
+#     draw maps with double link color map
+#     :param two_dim_color_arr: color block used for legend
+#     :param block_position: color legend position
+#     :param resize: whether to resize the factor map data
+#     :param map_x_data: one of the factor in mapping (should be 2-dimensional array)
+#     :param map_y_data: another factor in mapping (should be 2-dimensional array)
+#     :param resize: resize the data by map_x_data
+#     :return: a matplotlib color map
+#     """
+#     if resize:
+#         map_y_data.resize(map_x_data.shape)
+#     if map_x_data.shape == map_y_data.shape:
+#         rows, cols, colors = two_dim_color_arr.shape
+#         fig: plt.Figure = plt.figure(figsize=(rows, cols))
+#         # draw main picture
+#         ax_main = fig.add_subplot(projection=ccrs.Mollweide())
+#         # ax_main.stock_img()
+#         # ax_main.coastlines()
+#         # draw legend picture
+#         ax_legend = fig.add_axes(
+#             (block_position[0], block_position[1], rows * block_position[2], cols * block_position[3]))
+#         # ax_legend.imshow(two_dim_color_arr, cmap='viridis')
+#         fig.show()
+#     else:
+#         raise ValueError("the size of data is not equal")
 
 
 def construct_arr(range_1: list, range_2: list, color_num) -> tuple[np.ndarray, np.ndarray]:
@@ -50,7 +50,7 @@ def construct_arr(range_1: list, range_2: list, color_num) -> tuple[np.ndarray, 
     return x_v_arr, y_v_arr
 
 
-def two_dimensional_color_map(x_Hue: int, y_Hue: int,
+def two_dimensional_color_map(x_Hue: int or float, y_Hue: int  or float,
                               x_Saturability: list[int], y_Saturability: list[int],
                               color_num: int = 5, value: int = 255, color_block_size: int = 50
                               , output_size: tuple = (500, 500), x_v=None, y_v=None) -> np.ndarray:
@@ -64,27 +64,24 @@ def two_dimensional_color_map(x_Hue: int, y_Hue: int,
     :param x_Saturability:  the Saturability of the x dimension of the picture (0~255)
     :param y_Saturability:  the Saturability of the y dimension of the picture (0~255)
     :param color_num: the number of color intervals of the picture
-    :param value: the value of color (0~255)
+    :param value: the value(HSV) of color (0~255)
     :param color_block_size: the size of each block of color
     :return: a 2-dimensional color map
     """
     # construct Hue array
     x_Hue_arr = x_Hue * np.ones((color_num, color_num))
     y_Hue_arr = y_Hue * np.ones((color_num, color_num))
+
     # construct Saturability array
     x_S_arr, y_S_arr = construct_arr(x_Saturability, y_Saturability, color_num)
-    # x_S_arr = np.linspace(start=x_Saturability[0], stop=x_Saturability[1], num=color_num)
-    # x_S_arr = np.tile(x_S_arr, (color_num, 1))
-    # y_S_arr = np.linspace(y_Saturability[0], y_Saturability[1], num=color_num)
-    # y_S_arr = np.tile(y_S_arr, (color_num, 1))
-    # y_S_arr = y_S_arr.T.copy()
-    # y_S_arr = np.flip(y_S_arr, axis=0).copy()
+
     # construct Value array
     if x_v is None or y_v is None:
         x_v_arr = value * np.ones((color_num, color_num))
         y_v_arr = value * np.ones((color_num, color_num))
     else:
         x_v_arr, y_v_arr = construct_arr(x_v, y_v, color_num)
+
     # build x-picture
     x_hsv_img = np.zeros((color_num, color_num, 3), dtype=np.uint8)
     x_hsv_img[:, :, 0] = x_Hue_arr
@@ -96,6 +93,7 @@ def two_dimensional_color_map(x_Hue: int, y_Hue: int,
     # cv2.imshow('x_image', resized_image)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
+
     # build y-picture
     y_hsv_img = np.zeros((color_num, color_num, 3), dtype=np.uint8)
     y_hsv_img[:, :, 0] = y_Hue_arr
@@ -109,6 +107,8 @@ def two_dimensional_color_map(x_Hue: int, y_Hue: int,
     # cv2.imshow("img", img)
     # cv2.resizeWindow("img", 500, 500)
     # cv2.waitKey(0)
+
+    # combine color maps
     combine = cv2.addWeighted(cv2.resize(x_img, (output_size[0], output_size[1])), 0.8,
                               cv2.resize(y_img, (output_size[0], output_size[1])), 0.8, 0.5)
     # cv2.imshow("img", combine)
@@ -142,7 +142,7 @@ def colormap_array(dataset_1: gdal.Dataset, dataset_2: gdal.Dataset,
     output an array with three bands with linking color map array
     :param nodata: set nodata value for each band
     :param class_with_list: whether giving a list to the classification instead of the point num
-    :param block: size of color array block, it can be inferred from the color array
+    :param block: size of color array block, it can be inferred from the color array(color map 's width divides by color number)
     :param classification_list_2: the second raster classification list defined by own
     :param classification_list_1: the first raster classification list defined by own
     :param dataset_1: the first dataset (direction in color map ——）
@@ -203,7 +203,7 @@ def colormap_array(dataset_1: gdal.Dataset, dataset_2: gdal.Dataset,
                         class_range_2.append([classification_list_2[i], classification_list_2[i + 1]])
             else:
                 class_range_1 = classification_list_1
-                print(f"")
+                print(f"Using defined range list")
                 class_range_2 = classification_list_2
         else:
             raise ValueError(f"the size of classification array can't match the number of color number")
@@ -229,7 +229,7 @@ def colormap_array(dataset_1: gdal.Dataset, dataset_2: gdal.Dataset,
                     x_loc = 0
                 if y_loc is None:
                     y_loc = 0
-                if x_loc == 0 and y_loc == 0:
+                if x_loc == 0 or y_loc == 0:
                     out_arr[::-1, i, j] = np.array([-1, -1, -1]).reshape(3, )
                 else:
                     out_arr[::-1, i, j] = color_array[y_loc, x_loc, :]
@@ -241,10 +241,10 @@ def add_grid(img_arr, color_num: int, origin_location: tuple = (0, 0)):
     y_block_size = int(img_arr.shape[0] / color_num)
     # draw row lines
     for i in range(1, int((img_arr.shape[0]) / (img_arr.shape[0] / color_num) + 1)):
-        cv2.line(color_arr, (origin_location[0], i * x_block_size), (img_arr.shape[1], i * x_block_size),
+        cv2.line(img_arr, (origin_location[0], i * x_block_size), (img_arr.shape[1], i * x_block_size),
                  (250, 250, 250), 1)
     for i in range(1, int((img_arr.shape[1]) / (img_arr.shape[1] / color_num) + 1)):
-        cv2.line(color_arr, (i * y_block_size, origin_location[1]), (i * y_block_size, img_arr.shape[0]),
+        cv2.line(img_arr, (i * y_block_size, origin_location[1]), (i * y_block_size, img_arr.shape[0]),
                  (250, 250, 250), 1)
 
 
@@ -283,6 +283,7 @@ if __name__ == "__main__":
     raster_2 = r"C:\Users\PZH\Desktop\drawing\MEM\2007_BTH_USMpop_raster_origin.tif"
     ds_1 = raster_read(raster_1)
     ds_2 = raster_read(raster_2)
+
     # get two-dim color map array
     # color_arr = two_dimensional_color_map(90, 120, [30, 240],
     #                                       [30, 240], color_num=10, color_block_size=30)
@@ -300,6 +301,7 @@ if __name__ == "__main__":
     # cv2.imwrite(color_map_path, color_arr)
     # cv2.imshow("img", color_arr)
     # cv2.waitKey(0)
+
     # get the map with color link
     defined_classification__1_list = [[1.005351, 1000.000000], [1000.000001, 3000.000000],
                                       [3000.000001, 6000.000000], [6000.000001, 10000.000000],

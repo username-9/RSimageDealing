@@ -2,8 +2,8 @@ from osgeo import ogr
 
 from TreeHeightToDiameter.script import TreeFunction
 from TreeHeightToDiameter.script.TreeFunction import find_carbon_coefficient, get_co_table
-from UtilitiesForDealingImage.ReadMain import vector_read
-from UtilitiesForDealingImage.VectorProcess import find_attribution
+from UtilitiesForProcessingImage.ReadMain import vector_read
+from UtilitiesForProcessingImage.VectorProcess import find_attribution
 
 if __name__ == '__main__':
     trees = {
