@@ -27,11 +27,11 @@ def para_cal_s_trend(arr, x_pos, y_pos, x_size, y_size):
     return s_trend_array, x_pos, y_pos, x_size, y_size
 
 
-
 if __name__ == "__main__":
     # set directory and file path
     lucc_dir = r""
-    tac_series = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_series_0913.tif"
+    tac_series = (r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_series_0913"
+                  r".tif")
 
     # read array from raster
     tac_s_ds = gdal.Open(tac_series)
@@ -60,5 +60,3 @@ if __name__ == "__main__":
             temp_arr, x_offset, y_offset, x_size, y_size = re
             re_arr[y_offset:y_offset + y_size, x_offset:x_offset + x_size] = temp_arr
             block.write_by_block(output_trend_raster, temp_arr, x_offset, y_offset, write_data_type=gdalconst.GDT_Float32)
-
-    # get trend by time windows and lucc(forest type)
