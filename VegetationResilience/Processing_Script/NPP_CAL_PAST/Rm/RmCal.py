@@ -8,7 +8,7 @@ import os
 from tqdm import tqdm
 
 from UtilitiesForProcessingImage.UtilityFunction import workdir_filelist
-from VegetationResilience.Processing_Script.NPP_cal.BuildParameterRaster.SLARaster.SLARaster import get_specific_lucc_dict
+from VegetationResilience.Processing_Script.NPP_CAL_PAST.BuildParameterRaster.SLARaster.SLARaster import get_specific_lucc_dict
 
 
 def get_year_para_array(directory, year_i):

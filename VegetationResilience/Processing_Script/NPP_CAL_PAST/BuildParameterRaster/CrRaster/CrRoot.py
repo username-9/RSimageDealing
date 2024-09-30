@@ -5,7 +5,7 @@ from osgeo import gdal
 from tqdm import tqdm
 
 from UtilitiesForProcessingImage.UtilityFunction import workdir_filelist
-from VegetationResilience.Processing_Script.NPP_cal.BuildParameterRaster.SLARaster.SLARaster import get_specific_lucc_dict
+from VegetationResilience.Processing_Script.NPP_CAL_PAST.BuildParameterRaster.SLARaster.SLARaster import get_specific_lucc_dict
 
 
 def para_cal(input_file_path, output_file_dir, ref_dictionary):

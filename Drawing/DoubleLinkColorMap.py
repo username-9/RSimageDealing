@@ -1,12 +1,9 @@
-import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.colors import hsv_to_rgb
-import cartopy.crs as ccrs
 import cv2
+import numpy as np
 from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ReadMain import read_band_scale_offset, raster_read
+from UtilitiesForProcessingImage.ReadMain import raster_read
 from UtilitiesForProcessingImage.WriteMain import raster_write
 
 
@@ -151,7 +148,8 @@ def colormap_array(dataset_1: gdal.Dataset, dataset_2: gdal.Dataset,
     :return: map with color link
     """
     factor_1_arr = dataset_1.ReadAsArray()
-    factor_2_arr = dataset_2.ReadAsArray()
+    # factor_2_arr = dataset_2.ReadAsArray()
+    factor_2_arr = np.abs(dataset_2.ReadAsArray())
     factor_1_max, factor_1_min = np.max(factor_1_arr), np.min(factor_1_arr)
     print(f"Dataset-1: max: {factor_1_max}, min: {factor_1_min}")
     factor_2_max, factor_2_min = np.max(factor_2_arr), np.min(factor_2_arr)

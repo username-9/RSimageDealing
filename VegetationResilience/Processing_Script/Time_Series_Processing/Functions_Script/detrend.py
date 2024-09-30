@@ -34,26 +34,15 @@ def season_detrend(ser: np.ndarray) -> np.ndarray:
     return ser
 
 
-def season_detrend_1(ser: np.ndarray, diff_order = 1) -> np.ndarray:
+def season_detrend_1(ser: np.ndarray, T = 1) -> np.ndarray:
     """
-    使用差分方法去除一维数组的趋势。
-
-    参数:
-    :param ser 一维数组，pandas的Series格式。
-    :param diff_order  差分的阶数，默认为1。
-
-    返回:
-    去除趋势后的数组。
+    :param ser 一维数组
+    :param T  周期
     """
-    # 确保输入是pandas Series
-    if not isinstance(ser, pd.Series):
-        ser = pd.Series(ser)
-
-        # 进行差分
-    diff_series = ser.diff(periods=diff_order)
-    diff_series = np.array(diff_series)
-
-    return diff_series
+    diff_ser = np.ones((ser.shape[0]-T,))
+    for i in range(len(ser) - T):
+        diff_ser[i] = ser[i+T] - ser[i]
+    return diff_ser
 
 
 def para_cal_season(arr, index):
@@ -78,9 +67,7 @@ if __name__ == '__main__':
         pass
     else:
         os.mkdir(out_dir)
-    for file in file_list:
-        if file.endswith(".tif") is not True:
-            file_list.remove(file)
+    file_list = [file for file in file_list if file.endswith(".tif")]
     # # Handle by block
     # block = ImageBlock(file_list[0], 500, 500)
     # region = block.get_blocks_region()
@@ -123,7 +110,7 @@ if __name__ == '__main__':
         del ds
         merge_array = None
         npp_detrended = None
-        if not os.path.exists(os.path.join(out_dir, "npp_detrended_0905.npy")):
+        if not os.path.exists(os.path.join(out_dir, "npp_detrended_0919.npy")):
             array_list = []
 
             for file in tqdm(file_list):
@@ -134,21 +121,22 @@ if __name__ == '__main__':
             merge_array = np.array(array_list)
 
             # remove the trend of season
-            npp_detrended = np.zeros((len(file_list), merge_array.shape[1], merge_array.shape[2]))
-            for i in tqdm(range(merge_array.shape[0])):
-                series_a = npp_detrended[i, :, :]
-                series_a = series_a.flatten()
-                npp_detrended[i, :, :] = (season_detrend_1(series_a)).reshape((merge_array.shape[1], merge_array.shape[2]))
+            npp_detrended = np.zeros((merge_array.shape[0]-12, merge_array.shape[1], merge_array.shape[2]))
+            # npp_detrended = season_detrend_1(merge_array)
+            for i in tqdm(range(merge_array.shape[1])):
+                for j in range(merge_array.shape[2]):
+                    series_a = merge_array[:, i, j]
+                    npp_detrended[:, i, j] = (season_detrend_1(series_a, 12))
             # # parallel calculation for season detrend (need to construct shared memory)
             # with Pool(processes=8) as pool:
             #     para_ls_2 = [(npp_detrended, i) for i in range(merge_array.shape[0])]
             #     pool.starmap(para_cal_season, para_ls_2)
 
             # remove the linear trend
-            linear_arr = np.ones((merge_array.shape[1], merge_array.shape[2]))
-            for i in tqdm(range(merge_array.shape[1])):
-                for j in range(merge_array.shape[2]):
-                    npp_array: np.ndarray = merge_array[:, i, j]
+            linear_arr = np.ones((npp_detrended.shape[1], npp_detrended.shape[2]))
+            for i in tqdm(range(npp_detrended.shape[1])):
+                for j in range(npp_detrended.shape[2]):
+                    npp_array: np.ndarray = npp_detrended[:, i, j]
                     # 如果这个序列中的数字均为0 则令它为2
                     # if (npp_array == 0).all():
                     #     npp_array = 2 * np.ones_like(npp_array)
@@ -159,11 +147,11 @@ if __name__ == '__main__':
             # with Pool(processes=4) as p:
             #     para_ls_1 = [(i, j, merge_array, npp_detrended) for i in range(merge_array.shape[1]) for j in range(merge_array.shape[2])]
             #     p.starmap(para_cal_linear, para_ls_1)
-            np.save(os.path.join(out_dir, "npp_detrended_0905.npy"), npp_detrended)
-            np.save(os.path.join(out_dir, "npp_interception_0905.npy"), linear_arr)
+            np.save(os.path.join(out_dir, "npp_detrended_0919.npy"), npp_detrended)
+            np.save(os.path.join(out_dir, "npp_interception_0919.npy"), linear_arr)
         else:
-            npp_detrended = np.load(os.path.join(out_dir, "npp_detrended_0905.npy"))
-        output_file = os.path.join(out_dir, "detrended_0905.tif")
+            npp_detrended = np.load(os.path.join(out_dir, "npp_detrended_0919.npy"))
+        output_file = os.path.join(out_dir, "detrended_0919.tif")
         driver: gdal.Driver = gdal.GetDriverByName('GTiff')
         ds_detrend: gdal.Dataset = driver.Create(output_file, int(npp_detrended.shape[2]),
                                                  int(npp_detrended.shape[1]), bands=npp_detrended.shape[0],

@@ -21,11 +21,11 @@ from UtilitiesForProcessingImage.UtilityFunction import workdir_filelist
 
 
 if __name__ == "__main__":
-    work_path = r"D:\Data\VegetationResilienceDealing\Integrate_Output\TMP\TMP_BTH_CLIP_OUTPUT"
+    work_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\PRE\PRE_BTH_CLIP_OUTPUT"
     filelist = workdir_filelist(work_path)
-    out_dir = r"D:\Data\VegetationResilienceDealing\Integrate_Output\TMP\TMP_BTH_RESAMPLE"
+    out_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\PRE\PRE_RESAMPLE_OUTPUT"
     # ref tif
-    ref = r"D:\Data\VegetationResilienceDealing\Integrate_Output\GPP\GPP_BTH_CLIP\200001.tif"
+    ref = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\NPP\NPP_DAILY\npp_2001-001.tif"
     gdal.AllRegister()
     ref_ds: gdal.Dataset = gdal.Open(ref)
     width = ref_ds.RasterXSize

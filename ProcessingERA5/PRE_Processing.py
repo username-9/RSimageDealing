@@ -18,6 +18,7 @@ def para_cal(raster, out_dir, _year):
     array[array != no_data] = array[array != no_data] * 1000
     def_proj = ds.GetProjection()
     def_trans = ds.GetGeoTransform()
+
     data_type = ds.GetRasterBand(1).DataType
     del ds
 

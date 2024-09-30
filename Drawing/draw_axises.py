@@ -29,9 +29,9 @@ if __name__ == "__main__":
     y_list.append(1000)
     ax.set_yticks(y_list)
 
-    labels = ["-0.01", "-0.015", "0", "0.025", "0.027", "0.03", "0.035", "0.036", "0.039", "0.1", "0.13"]
+    labels = ["-0.025", "-0.02", "-0.015", "-0.01", "-0.005", "0", "0.001", "0.005", "0.01", "0.02", "0.03"]
     ax.set_xticklabels(labels)
-    y_lable = [0.3, 0.6, 0.7, 0.73, 0.75, 0.77, 0.79, 0.8, 0.9, 0.95, 1]
+    y_lable = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
     y_lable.reverse()
     ax.set_yticklabels(y_lable)
 
@@ -61,5 +61,5 @@ if __name__ == "__main__":
 
     # 显示图片
     fig: plt.Figure
-    fig.savefig(r"F:\DATA\DRAW\PIC\1_NPP_TAC_ANLYSIS\ColorMapWithAxies.png")
+    fig.savefig(r"F:\DATA\DRAW\PIC\1_NPP_TAC_ANLYSIS\ColorMapWithAxies_0919.png")
     # plt.show()

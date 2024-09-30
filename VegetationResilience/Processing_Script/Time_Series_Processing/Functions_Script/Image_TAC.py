@@ -63,8 +63,8 @@ if __name__ == '__main__':
     # for file in file_list:
     #     if file.endswith(".tif") is not True:
     #         file_list.remove(file)
-    output_file = os.path.join(out_dir, "tca_1lag_0905.tif")
-    detrend_file = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\DETREND\detrended_0905.tif"
+    output_file = os.path.join(out_dir, "tca_1lag_0919.tif")
+    detrend_file = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\DETREND\detrended_0919.tif"
     block = ImageBlock.ImageBlock(detrend_file, 300, 300)
     block.scale = [1]
     block.offset = [0]

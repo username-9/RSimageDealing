@@ -23,8 +23,8 @@ if __name__ == "__main__":
     ax: plt.Axes
 
     # get data
-    npp_trend = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\NPP_TREND\NPP_TREND.tif"
-    tac_1_lag = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0905.tif"
+    npp_trend = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\NPP_TREND\NPP_TREND_0919.tif"
+    tac_1_lag = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0919.tif"
     lucc = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\LUCC(use)\LUCC_RESAMPLE\CLCD_v01_2021_albert.tif"
 
     ds_nt = gdal.Open(npp_trend)
@@ -92,7 +92,7 @@ if __name__ == "__main__":
     ax.set_xlabel("NPP Trend Slope")
     ax.set_ylabel("Probability Density")
     ax.set_ylim(0)
-    fig.savefig(r".\NPY_files\nt_hist.png")
+    fig.savefig(r".\NPY_files\nt_hist_0919.png")
 
 
 

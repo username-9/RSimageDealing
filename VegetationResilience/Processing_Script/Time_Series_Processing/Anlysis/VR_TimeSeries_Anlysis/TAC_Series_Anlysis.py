@@ -15,7 +15,7 @@ def para_cal_s_trend(arr, x_pos, y_pos, x_size, y_size):
     s_trend_array = np.ones((height, width), np.float32)
     for i in tqdm.tqdm(range(height)):
         for j in range(width):
-            data_array = arr[:, i, j]
+            data_array = np.abs(arr[:, i, j])
             tolerance = 1e-1
             if np.all(np.abs(data_array - 2) < tolerance):
                 continue
@@ -30,8 +30,7 @@ def para_cal_s_trend(arr, x_pos, y_pos, x_size, y_size):
 if __name__ == "__main__":
     # set directory and file path
     lucc_dir = r""
-    tac_series = (r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_series_0913"
-                  r".tif")
+    tac_series = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_series_0913.tif"
 
     # read array from raster
     tac_s_ds = gdal.Open(tac_series)
@@ -42,7 +41,7 @@ if __name__ == "__main__":
     del tac_s_ds
 
     # get linear trend from TAC series
-    output_trend_raster = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_s_trend.tif"
+    output_trend_raster = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_s_trend_0929.tif"
     block = UtilitiesForProcessingImage.ImageBlock.ImageBlock(tac_series, 300, 300)
     region_gene = block.read_by_generator()
     region_array = block.get_list_of_block_array(20, region_gene)

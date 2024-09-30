@@ -7,7 +7,7 @@ from tqdm import tqdm
 if __name__ == "__main__":
     # set directory and file path
     lucc_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\LUCC(use)\LUCC_RESAMPLE\CLCD_v01_2021_albert.tif"
-    tac_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0905.tif"
+    tac_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0919.tif"
 
     # read raster
     lucc_ds: gdal.Dataset = gdal.Open(lucc_path)
@@ -51,4 +51,4 @@ if __name__ == "__main__":
             count_class = 0
         statistic_dict_2[class_list[i]] = count_class
     all_dict[">0.7"] = statistic_dict_2
-    json.dump(all_dict, open(r"..\Anlysis_JSON\COUNT_TAC_BIGGER_0P6.json", "w"))
+    json.dump(all_dict, open(r"..\Analysis_JSON\COUNT_TAC_BIGGER_0P6_0919.json", "w"))

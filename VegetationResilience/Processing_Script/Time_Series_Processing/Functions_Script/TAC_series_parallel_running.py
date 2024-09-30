@@ -54,9 +54,9 @@ if __name__ == '__main__':
         pass
     else:
         os.mkdir(out_dir)
-    file_path = r"detrended_0905.tif"
-    output_file = os.path.join(out_dir, "tac_series_0913.tif")
-    output_array = os.path.join(out_dir, "tac_series_0913_test.npy")
+    file_path = r"detrended_0919.tif"
+    output_file = os.path.join(out_dir, "tac_series_0919_3w.tif")
+    output_array = os.path.join(out_dir, "tac_series_0919_3w.npy")
     time_window = 3
     parallel_num = 8
     batch_block_num = 20

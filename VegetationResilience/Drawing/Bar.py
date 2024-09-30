@@ -11,7 +11,8 @@ if __name__ == "__main__":
     ax: plt.Axes
 
     # load data
-    with open(r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script\Time_Series_Processing\Anlysis\Anlysis_JSON\COUNT_TAC_BIGGER_0P6.json",
+    with open(
+            r"/VegetationResilience/Processing_Script/Time_Series_Processing/Anlysis/Analysis_JSON\COUNT_TAC_BIGGER_0P6.json",
               'r') as f:
         data_dict = json.load(f)
     bigger_p_seven = data_dict[">0.7"]

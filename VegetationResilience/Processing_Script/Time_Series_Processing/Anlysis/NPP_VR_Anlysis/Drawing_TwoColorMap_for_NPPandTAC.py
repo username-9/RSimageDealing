@@ -25,23 +25,23 @@ if __name__ == "__main__":
     # cv2.waitKey(0)
 
     # read rasters
-    raster_1 = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\NPP_TREND\NPP_TREND.tif"
-    raster_2 = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0905.tif"
+    raster_1 = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\NPP_TREND\NPP_TREND_0919.tif"
+    raster_2 = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0919.tif"
     ds_1 = raster_read(raster_1)
     ds_2 = raster_read(raster_2)
 
     color_arr = cv2.imread(r"F:\DATA\DRAW\PIC\color_map.png")
 
-    defined_classification__1_list = [[-0.015, 0.01],[-0.01, 0],
-                                      [0.000001, 0.025], [0.025001, 0.027],
-                                      [0.027001, 0.03], [0.030001, 0.035],
-                                      [0.035001, 0.036], [0.036001, 0.039],
-                                      [0.039001, 0.1], [0.10001, 0.13]]
-    defined_classification__2_list = [[0.3, 0.6], [0.6001, 0.7],
-                                      [0.7001, 0.73], [0.73001, 0.75],
-                                      [0.75001, 0.77], [0.77001, 0.79],
-                                      [0.79001, 0.80000], [0.80001, 0.9000],
-                                      [0.9001, 0.95000], [0.95001, 1]]
+    defined_classification__1_list = [[-0.025, -0.020001],[-0.02, -0.0151],
+                                      [-0.015, -0.01001], [-0.01, -0.005001],
+                                      [-0.005, 0], [0.0000001, 0.001],
+                                      [0.0010001, 0.005], [0.0050001, 0.01],
+                                      [0.0100001, 0.02], [0.0200001, 0.3]]
+    defined_classification__2_list = [[0, 0.1], [0.1001, 0.2],
+                                      [0.2001, 0.3], [0.30001, 0.4],
+                                      [0.4001, 0.5], [0.5001, 0.6],
+                                      [0.6001, 0.70000], [0.70001, 0.8000],
+                                      [0.8001, 0.9000], [0.9001, 1]]
 
     out_array = colormap_array(ds_1, ds_2, color_arr, defined_classification__1_list, defined_classification__2_list)
     # write array with reference by raster_1
@@ -49,6 +49,6 @@ if __name__ == "__main__":
     ref_srs = ds_1.GetProjection()
     del ds_1
     del ds_2
-    output_path = r"F:\DATA\DRAW\PIC\npp_trend_TAC_map.tif"
+    output_path = r"F:\DATA\DRAW\PIC\npp_trend_TAC_map_0919.tif"
     raster_write(output_path, out_array, projection=ref_srs,
                  geo_transform=ref_geotrans, data_type=gdal.GDT_UInt16)

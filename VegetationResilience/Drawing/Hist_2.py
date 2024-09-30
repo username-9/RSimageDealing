@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     # get data
     # npp_trend = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\NPP_TREND\NPP_TREND.tif"
-    tac_1_lag = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0905.tif"
+    tac_1_lag = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0919.tif"
     lucc = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\LUCC(use)\LUCC_RESAMPLE\CLCD_v01_2021_albert.tif"
 
     ds_t1l = gdal.Open(tac_1_lag)
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     ax.set_xlabel("1 Lag TAC")
     ax.set_ylabel("Probability Density")
     ax.set_ylim(0)
-    fig.savefig(r".\NPY_files\t1l_hist.png")
+    fig.savefig(r".\NPY_files\t1l_hist_0919.png")
 
 
 

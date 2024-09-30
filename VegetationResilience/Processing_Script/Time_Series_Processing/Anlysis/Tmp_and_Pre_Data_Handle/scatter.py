@@ -1,13 +1,11 @@
 import os
 
 import numpy as np
-from matplotlib import pyplot as plt
 import pandas as pd
-from scipy.optimize import curve_fit
+import scipy.stats as stats
 import seaborn as sns
 import statsmodels.api as sm
-import statsmodels.formula.api as smf
-import scipy.stats as stats
+from matplotlib import pyplot as plt
 
 # plt.rcParams['text.usetex'] = True
 plt.rcParams['font.family'] = 'Calibri'
@@ -48,35 +46,36 @@ def scatter(x, y, ee: int=1, ci=95, file_name: str="default_scatter.png", file_d
         #         f"R$^2$ = {r_2:.3f}"+"\n"+
         #         f"RMSE = {rmse:.3f}")
         text = (f"y = {intercept:.3f}x + {b:.3f}\n"
-                f"R$^2$ = {r_2:.3f}")
+                f"Spearman R = {r_2:.3f} \n"
+                f"P value = {rmse:.3f}")
         ax.text(0.1, 0.9, text, fontsize=30,
                 horizontalalignment='left', verticalalignment='top',
                 transform=ax.transAxes)
         # x = x[::10]
         # iv_l = iv_l[::10]
         # iv_u = iv_u[::10]
-        ax.plot(x, iv_l, color="blue", linestyle='-')
-        ax.plot(x, iv_u, color="blue", linestyle='-')
-        ax.fill_between(x, iv_l, iv_u, color='grey', alpha=0.05)
+        # ax.plot(x, iv_l, color="blue", linestyle='-')
+        # ax.plot(x, iv_u, color="blue", linestyle='-')
+        # ax.fill_between(x, iv_l, iv_u, color='grey', alpha=0.05)
     elif ee == 3:
         ax.scatter(x, y, edgecolors=None, c='k', s=3, alpha=0.3)
         fit_plot_line(x, y, ax, ci)
     # ax.legend()
     # ax.set_xlim(0, 10)
     # ax.set_ylim(0, 10)
-    ax.set_xlim(0,9)
-    ax.set_ylim(0,9)
-    ax.set_xlabel(r'Reference NPP (gC/m$^2\cdot$day)', fontsize=30)
-    ax.set_ylabel('Modelled NPP (gC/m$^2\cdot$day)', fontsize=30)
+    # ax.set_xlim(0,9)
+    # ax.set_ylim(0,9)
+    # ax.set_xlabel(r'Vegetation Resilience (gC/m$^2\cdot$day)', fontsize=30)
+    ax.set_xlabel(r'Vegetation Resilience', fontsize=30)
+    ax.set_ylabel('Temperature', fontsize=30)
     ax.tick_params(axis='both', which='major', labelsize=25)
-    lim = max(max(x), max(y))
-    x = [0, lim+10]
-    y = [0, lim+10]
-    ax.plot(x, y, 'k--')  # 'k--'表示黑色虚线
+    # lim = max(max(x), max(y))
+    # x = [0, lim+10]
+    # y = [0, lim+10]
+    # ax.plot(x, y, 'k--')  # 'k--'表示黑色虚线
     plt.rcParams['agg.path.chunksize'] = 200
     plt.savefig(os.path.join(file_dir, file_name))
     print("done")
-
 
 
 def fit_plot_line(x, y, ax, ci=95):
