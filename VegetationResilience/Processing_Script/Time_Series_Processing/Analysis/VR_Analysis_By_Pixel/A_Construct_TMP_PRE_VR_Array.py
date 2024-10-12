@@ -11,7 +11,7 @@ def para_cal(_vr_arr, year, month):
     # set directory
     tmp_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\TMP\TMP_BTH_RESAMPLE"
     pre_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\PRE\PRE_RESAMPLE_OUTPUT"
-    out_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\CONSTRUCT_ARRAY_TMP_PRE_VR"
+    out_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\CONSTRUCT_ARRAY_TMP_PRE_VR_1010"
 
     # get file path mainly by VR path
     tmp_path = os.path.join(tmp_dir, f"{year}-"+f"{month}".zfill(3)+".tif")
@@ -36,11 +36,11 @@ def para_cal(_vr_arr, year, month):
 
 
 if __name__ == "__main__":
-    vr_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_series_0913.tif"
+    vr_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_series_0919_3w.tif"
     vr_ds = gdal.Open(vr_path)
     vr_array = vr_ds.ReadAsArray()
     del vr_ds
-    time = datetime.datetime(2000, 5, 1)
+    time = datetime.datetime(2001, 5, 1)
     para_ls = []
     for i in range(vr_array.shape[0]):
         para_ls.append((vr_array[i, :, :], time.year, time.month))

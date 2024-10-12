@@ -8,10 +8,9 @@ from tqdm import tqdm
 
 if __name__ == "__main__":
     # get every time value and each lucc VR values
-    json_lucc = (r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script"
-                 r"\Time_Series_Processing\Anlysis\VR_Analysis_By_Pixel\Merge_Bin_Data_LUCC.json")
+    json_lucc = r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script\Time_Series_Processing\Analysis\VR_Analysis_By_Pixel\VR_Sta_Json\C_Merge_Bin_Data_LUCC.json"
     out_npy_dir = (r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script"
-                    r"\Time_Series_Processing\Anlysis\VR_Analysis_By_Pixel\VR_Sta_Json")
+                    r"\Time_Series_Processing\Analysis\VR_Analysis_By_Pixel\VR_Sta_Json")
     with open(json_lucc, "r") as f:
         vr_lucc_dict = json.load(f)
 
@@ -34,5 +33,5 @@ if __name__ == "__main__":
                 t_stat, p_value = stats.ttest_1samp(sta_data, 0)
                 if p_value < 0.05:
                     p_arr[i, y_pos, x_pos] = 1
-    np.save(os.path.join(out_npy_dir, "p_arr.npy"), p_arr)
-    np.save(os.path.join(out_npy_dir, "construct_arr.npy"), construct_arr)
+    np.save(os.path.join(out_npy_dir, "D_p_arr_1010.npy"), p_arr)
+    np.save(os.path.join(out_npy_dir, "D_construct_arr_1010.npy"), construct_arr)

@@ -256,13 +256,15 @@ class ImageBlock:
         :param function: function apply for blocks
         :param block_num: number of processing blocks in a batch
         :param parallel_num: parallel processing number
-        :param region_generator: a generator for generating regions
+        :param region_generator: a generator for generating regions to save ram
         :param result_function: function apply for calculating results
         :return: the list of multiply processing results
         """
         region_ls = self.get_blocks_region()
         if region_generator is None:
             this_batch = block_num
+            if this_batch > self.all_num:
+                this_batch = self.all_num
             batch_index = 0
             re = []
             while this_batch > 0:
@@ -273,7 +275,10 @@ class ImageBlock:
                     arr = ds.ReadAsArray(x_pos, y_pos, x_size, y_size)
                     arr_list.append((arr, x_pos, y_pos, x_size, y_size))
                 with multiprocessing.Pool(processes=parallel_num) as pool:
-                    result = pool.map(function, arr_list)
+                    if type(arr_list[0]) == tuple:
+                        result = pool.starmap(function, arr_list)
+                    else:
+                        result = pool.map(function, arr_list)
                     if result_function is not None:
                         result = result_function(result)
                     re.append(result)
@@ -288,7 +293,10 @@ class ImageBlock:
             for i in pro_bar:
                 para_ls = next(region_array)
                 with multiprocessing.Pool(processes=parallel_num) as pool:
-                    result = pool.map(function, para_ls)
+                    if type(para_ls[0]) == tuple:
+                        result = pool.starmap(function, para_ls)
+                    else:
+                        result = pool.map(function, para_ls)
                     if result_function is not None:
                         result = result_function(result)
                     re.append(result)

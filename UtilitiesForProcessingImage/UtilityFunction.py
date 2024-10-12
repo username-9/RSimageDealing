@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 import numpy as np
 from dateutil.relativedelta import relativedelta
+from numpy import ndarray
 from osgeo import ogr, gdal, gdal_array
 
 
@@ -308,6 +309,58 @@ def workdir_filelist(path, file_format: str = ".tif"):
         return files
     else:
         raise OSError(f"Path {path} does not exist")
+
+
+def merge_arrays_with_coords(arrays: ndarray or list[ndarray], coords: tuple[int, int] or list[tuple[int, int]],
+                             target_array: ndarray = None) -> ndarray or None:
+    """
+    合并多个多维NumPy数组，根据提供的左上角坐标放置每个数组。
+
+    :param target_array: 当希望将单个数组嵌入进某个目标数组时，提供目标数组以匹配
+    :param coords: (list of tuple tuple): 每个数组的左上角坐标列表，格式为 (y, x)
+    :param arrays: (list of ndarray or ndarray), 要合并的数组列表
+
+    :return: ndarray or None 合并后的数组或仅对目标数组进行操作
+    """
+    # 检查 arrays 是否为列表
+    if not isinstance(arrays, list):
+        if arrays.ndim != 3:
+            raise ValueError("Arrays must have 3 dimensions")
+        if target_array is None:
+            raise TypeError("target array must be set")
+        else:
+            if not isinstance(coords, tuple):
+                raise TypeError("coords must be a tuple in this way")
+            else:
+                y = coords[0]
+                x = coords[1]
+                target_array[:, y:y + arrays.shape[1], x:x + arrays.shape[2]] = arrays
+    else:
+        # 检查 arrays 列表是否包含 NumPy 数组
+        if arrays[0].ndim != 3:
+            raise ValueError("Arrays must have 3 dimensions")
+        if not all(isinstance(array, np.ndarray) for array in arrays):
+            raise TypeError("arrays 列表中的每个元素都必须是 NumPy 数组")
+            # 检查 coords 是否为坐标列表
+        if not all(isinstance(coord, tuple) and len(coord) == 2 and all(isinstance(c, int) for c in coord) for coord in
+                   coords):
+            raise TypeError("coords 必须是包含 (y, x) 坐标的元组列表")
+
+            # 检查 arrays 和 coords 的长度是否匹配
+        if len(arrays) != len(coords):
+            raise ValueError("arrays 和 coords 的长度必须匹配")
+
+        # 获取每个数组的形状，以确定输出数组的总大小
+        max_height = max(coord[1] + array.shape[1] for coord, array in zip(coords, arrays))
+        max_width = max(coord[2] + array.shape[2] for coord, array in zip(coords, arrays))
+
+        # 创建一个空白数组来容纳所有输入的数组
+        merged_array = np.zeros((arrays[0].shape[0], max_height, max_width), dtype=arrays[0].dtype)
+
+        # 使用 scipy.ndimage.paste 将每个数组放置在相应的位置
+        for array, (y, x) in zip(arrays, coords):
+            merged_array[: y:y + array.shape[1], x:x + array.shape[2]] = array
+        return merged_array
 
 
 if __name__ == '__main__':

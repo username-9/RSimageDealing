@@ -5,7 +5,7 @@ import tqdm
 
 if __name__ == "__main__":
     # get min and max value of temperature and precipitation
-    npy_file_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\CONSTRUCT_ARRAY_TMP_PRE_VR"
+    npy_file_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\CONSTRUCT_ARRAY_TMP_PRE_VR_1010"
     min_tmp_v = 0
     max_tmp_v = 0
     min_pre_v= 4000

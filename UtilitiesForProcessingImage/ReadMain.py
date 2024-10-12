@@ -1,6 +1,7 @@
 import re
 import typing
 
+import numpy as np
 import openpyxl
 import tqdm
 from openpyxl.workbook import Workbook
@@ -201,6 +202,18 @@ def get_value_from_geo_coordination(src: gdal.Dataset, longitude: float or str, 
     if len(re_value) == 0:
         re_value = re_value[0]
     return re_value
+
+
+def raster_to_array(file_path:str) -> np.ndarray:
+    """
+    get array from raster (file path)
+    :param file_path: raster file path
+    :return: the array contained by raster
+    """
+    _ds = gdal.Open(file_path)
+    array = _ds.ReadAsArray()
+    del _ds
+    return array
 
 
 if __name__ == '__main__':

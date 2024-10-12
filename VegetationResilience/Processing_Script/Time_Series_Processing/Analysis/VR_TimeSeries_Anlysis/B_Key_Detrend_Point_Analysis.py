@@ -70,7 +70,15 @@ def detection_by_bg_t_test(data, alpha=0.05):
         return t_max[0]
 
 
-def detect_all_mutational_site(arr, alpha):
+def detect_all_mutational_site(arr, alpha) -> list:
+    """
+    using BG algorithm to detect all mutational site
+    :param arr: array(must be 1 dimension) to be analyzed
+    :param alpha: probability of making a mistake
+    :return: a list containing index of all mutational sites
+    """
+    if arr.ndim != 1:
+        raise ValueError("arr must be one dimensional")
     mutational_sites = []
     re = detection_by_bg_t_test(arr, alpha)
     check = True

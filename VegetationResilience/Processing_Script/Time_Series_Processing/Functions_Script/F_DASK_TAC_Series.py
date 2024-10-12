@@ -11,7 +11,7 @@ from numpy import ndarray
 from osgeo import gdalconst
 
 import UtilitiesForProcessingImage
-from Image_TAC import acf
+from F_Image_TAC import acf
 from multiprocessing import Process, Pool, Array
 
 

@@ -18,10 +18,9 @@ class_dict = {
 }
 
 if __name__ == "__main__":
-    npy_path = (r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script"
-                r"\Time_Series_Processing\Anlysis\VR_Analysis_By_Pixel\VR_Sta_Json\construct_arr.npy")
+    npy_path = r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script\Time_Series_Processing\Analysis\VR_Analysis_By_Pixel\VR_Sta_Json\D1_construct_arr_1010.npy"
     p_path = (r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script"
-              r"\Time_Series_Processing\Anlysis\VR_Analysis_By_Pixel\VR_Sta_Json\p_arr.npy")
+              r"\Time_Series_Processing\Analysis\VR_Analysis_By_Pixel\VR_Sta_Json\D2_p_arr_1010.npy")
 
     vr_arr = np.abs(np.load(npy_path))
     vr_arr[vr_arr.astype(int) == 2] = np.nan
@@ -40,16 +39,59 @@ if __name__ == "__main__":
     nice_red = [0.94, 0.16, 0.16]  # 好看的红色的RGB值，可以根据需要调整
 
     # 创建一个字典来定义颜色映射的段数据
+    # cdict = {
+    #     'red': [(0.0, 0.0, 0.0),  # 0.0时红色为0（实际上是深抹茶色的红色分量）
+    #             (0.5, dark_matcha[0], dark_matcha[0]),  # 中间点的红色分量，调整为抹茶色
+    #             (1.0, nice_red[0], nice_red[0])],  # 1.0时红色为红色值
+    #     'green': [(0.0, dark_matcha[1], dark_matcha[1]),  # 0.0时绿色为抹茶色的绿色分量
+    #               (0.5, 0.7, 0.7),  # 中间点的绿色分量，调整为过渡色（这里选择了一个较为中性的绿色）
+    #               (1.0, 0.0, 0.0)],  # 1.0时绿色为0（红色没有绿色分量）
+    #     'blue': [(0.0, dark_matcha[2], dark_matcha[2]),  # 0.0时蓝色为抹茶色的蓝色分量
+    #              (0.5, 0.7, 0.7),  # 中间点的蓝色分量，调整为过渡色（与绿色分量相同以保持色调和谐）
+    #              (1.0, 0.0, 0.0)]  # 1.0时蓝色为0（红色没有蓝色分量）
+    # }
+
+    # cdict = {
+    #     'red': [(0.0, dark_matcha[0], dark_matcha[0]),  # 0.0时红色为深抹茶色的红色分量
+    #             (0.5, 1.0, 1.0),  # 中间点的红色分量，调整为黄色
+    #             (1.0, nice_red[0], nice_red[0])],  # 1.0时红色为红色值
+    #     'green': [(0.0, dark_matcha[1], dark_matcha[1]),  # 0.0时绿色为深抹茶色的绿色分量
+    #               (0.5, 1.0, 1.0),  # 中间点的绿色分量，调整为黄色
+    #               (1.0, 0.0, 0.0)],  # 1.0时绿色为0（红色没有绿色分量）
+    #     'blue': [(0.0, dark_matcha[2], dark_matcha[2]),  # 0.0时蓝色为深抹茶色的蓝色分量
+    #              (0.5, 0.0, 0.0),  # 中间点的蓝色分量，调整为黄色（没有蓝色分量）
+    #              (1.0, 0.0, 0.0)]  # 1.0时蓝色为0（红色没有蓝色分量）
+    # }
+
+    # dark_research_green = (0.2, 0.3, 0.1)  # 较深的、不饱和的绿色，作为起始颜色
+    # neutral_yellow = (0.7, 0.7, 0.5)  # 中性的、不饱和的黄色，作为中间颜色
+    # muted_red = (0.6, 0.2, 0.2)
+    # cdict = {
+    #     'red': [(0.0, dark_research_green[0], dark_research_green[0]),  # 起始点为较深的绿色，红色分量为0
+    #             (0.5, neutral_yellow[0], neutral_yellow[0]),  # 中间点为中性黄色，红色分量适中
+    #             (1.0, muted_red[0], muted_red[0])],  # 结束点为较暗的红色
+    #     'green': [(0.0, dark_research_green[1], dark_research_green[1]),  # 起始点为较深的绿色
+    #               (0.5, neutral_yellow[1], neutral_yellow[1]),  # 中间点为中性黄色
+    #               (1.0, 0.0, 0.0)],  # 结束点绿色分量为0
+    #     'blue': [(0.0, dark_research_green[2], dark_research_green[2]),  # 起始点为较深的绿色，蓝色分量较低
+    #              (0.5, neutral_yellow[2], neutral_yellow[2]),  # 中间点为中性黄色，蓝色分量较低
+    #              (1.0, 0.0, 0.0)]  # 结束点蓝色分量为0
+    # }
+
+    light_research_green = (0.4, 0.5, 0.3)  # 较浅的、不饱和的绿色，作为起始颜色
+    research_yellow = (0.9, 0.9, 0.7)  # 柔和的、不饱和的黄色，作为中间颜色
+    soft_red = (0.8, 0.3, 0.3)  # 柔和的、不饱和的红色，但对比度适中，作为结束颜色
+
     cdict = {
-        'red': [(0.0, 0.0, 0.0),  # 0.0时红色为0（实际上是深抹茶色的红色分量）
-                (0.5, dark_matcha[0], dark_matcha[0]),  # 中间点的红色分量，调整为抹茶色
-                (1.0, nice_red[0], nice_red[0])],  # 1.0时红色为红色值
-        'green': [(0.0, dark_matcha[1], dark_matcha[1]),  # 0.0时绿色为抹茶色的绿色分量
-                  (0.5, 0.7, 0.7),  # 中间点的绿色分量，调整为过渡色（这里选择了一个较为中性的绿色）
-                  (1.0, 0.0, 0.0)],  # 1.0时绿色为0（红色没有绿色分量）
-        'blue': [(0.0, dark_matcha[2], dark_matcha[2]),  # 0.0时蓝色为抹茶色的蓝色分量
-                 (0.5, 0.7, 0.7),  # 中间点的蓝色分量，调整为过渡色（与绿色分量相同以保持色调和谐）
-                 (1.0, 0.0, 0.0)]  # 1.0时蓝色为0（红色没有蓝色分量）
+        'red': [(0.0, light_research_green[0], light_research_green[0]),  # 起始点为较浅的绿色，红色分量为0
+                (0.5, research_yellow[0], research_yellow[0]),  # 中间点为柔和黄色，红色分量适中
+                (1.0, soft_red[0], soft_red[0])],  # 结束点为柔和的红色，但对比度适中
+        'green': [(0.0, light_research_green[1], light_research_green[1]),  # 起始点为较浅的绿色
+                  (0.5, research_yellow[1], research_yellow[1]),  # 中间点为柔和黄色
+                  (1.0, 0.0, 0.0)],  # 结束点绿色分量为0
+        'blue': [(0.0, light_research_green[2], light_research_green[2]),  # 起始点为较浅的绿色，蓝色分量较低
+                 (0.5, research_yellow[2], research_yellow[2]),  # 中间点为柔和黄色，蓝色分量较低
+                 (1.0, 0.0, 0.0)]  # 结束点蓝色分量为0
     }
 
     # 创建自定义颜色映射
@@ -91,6 +133,14 @@ if __name__ == "__main__":
         # fig.colorbar(im, ax=ax)
         # ax.tick_params(labelsize=10)
         # fig.show()
-        out_dir = r"F:\DATA\DRAW\PIC\2_TACS_TMP_PRE_RELATIOIN"
+
+        # add p-value
+        arr = vr_arr[i]
+        data_cleaned = np.nan_to_num(arr)
+        y, x = np.nonzero(data_cleaned)
+        ax.scatter(x, y, c='black', s=5)
+
+
+        out_dir = r"F:\DATA\DRAW\PIC\2_TACS_TMP_PRE_RELATION_1010\ADD_P_VALUE"
         out_path = os.path.join(out_dir, f"T_P_V_{title}.png")
         fig.savefig(out_path)

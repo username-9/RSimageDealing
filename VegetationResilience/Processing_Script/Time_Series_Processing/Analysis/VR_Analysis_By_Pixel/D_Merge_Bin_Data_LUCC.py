@@ -2,12 +2,11 @@ import json
 
 from tqdm import tqdm
 
-from VegetationResilience.Processing_Script.Time_Series_Processing.Anlysis.VR_Analysis_By_Pixel.Get_VR_Sta_Array_Via_TMP_PRE_Scale_LUCC import \
+from VegetationResilience.Processing_Script.Time_Series_Processing.Analysis.VR_Analysis_By_Pixel.C2_Get_VR_Sta_Array_Via_TMP_PRE_Scale_LUCC import \
     merge_dicts_with_lists
 
 if __name__ == "__main__":
-    json_path = (r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script"
-                 r"\Time_Series_Processing\Anlysis\VR_Analysis_By_Pixel\Bin_Data_LUCC.json")
+    json_path = r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script\Time_Series_Processing\Analysis\VR_Analysis_By_Pixel\VR_Sta_Json\B3_Bin_Data_LUCC_1010.json"
     with open(json_path, "r") as json_file:
         data = json.load(json_file)
     re_dict = {}
@@ -18,6 +17,6 @@ if __name__ == "__main__":
             else:
                 re_dict[key] = merge_dicts_with_lists(re_dict[key], value)
 
-    out_json_path = "./Merge_Bin_Data_LUCC.json"
+    out_json_path = "VR_Sta_Json/C_Merge_Bin_Data_LUCC.json"
     with open(out_json_path, "w") as json_file:
         json.dump(re_dict, json_file)

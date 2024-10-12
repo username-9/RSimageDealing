@@ -8,12 +8,12 @@ import scipy.ndimage as filters
 
 def get_line_data():
     # get data
-    avg_json = r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Drawing\NPY_files\OUTPUT_STA_AVG_LS_0919.json"
-    count_json = r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Drawing\NPY_files\OUTPUT_COUNT_LUCC_LS_0919.json"
+    avg_json = r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Drawing\NPY_files\OUTPUT_STA_AVG_LS_1010.json"
+    count_json = r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Drawing\NPY_files\OUTPUT_COUNT_LUCC_LS_1010.json"
     sta_dict: dict = {}
     sta_dict_2 = None
     json_file = (r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script"
-                 r"\Time_Series_Processing\Anlysis\Analysis_JSON\OUTPUT_S_LUCC_STA_0919.json")
+                 r"\Time_Series_Processing\Analysis\Analysis_JSON\A_OUTPUT_S_LUCC_STA_1010.json")
     with open(json_file, "r") as file:
         data = dict(json.load(file))
 

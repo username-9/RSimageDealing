@@ -45,7 +45,7 @@ def get_dict_data(avg_json, count_json, file_path):
     return sta_dict, sta_dict_2, x_ls, x_tick
 
 if __name__ == '__main__':
-    one_json = "../Analysis_JSON/OUTPUT_S_LUCC_PRE_DATA.json"
-    two_json = "../Analysis_JSON/OUTPUT_S_LUCC_PRE_COUNT.json"
-    file_json = r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script\Time_Series_Processing\Anlysis\Analysis_JSON\OUTPUT_S_LUCC_Pre_0923.json"
+    one_json = "../Analysis_JSON/C2_OUTPUT_S_LUCC_TMP_DATA.json"
+    two_json = "../Analysis_JSON/C1_OUTPUT_S_LUCC_TMP_COUNT.json"
+    file_json = (r"C:\Users\PZH\PycharmProjects\RSimageProcessing\VegetationResilience\Processing_Script\Time_Series_Processing\Analysis\Analysis_JSON\B1_OUTPUT_S_LUCC_Tmp_1010.json")
     get_dict_data(one_json, two_json, file_json)
