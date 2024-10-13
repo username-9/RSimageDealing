@@ -204,7 +204,7 @@ def get_value_from_geo_coordination(src: gdal.Dataset, longitude: float or str, 
     return re_value
 
 
-def raster_to_array(file_path:str) -> np.ndarray:
+def raster_to_array(file_path: str) -> np.ndarray:
     """
     get array from raster (file path)
     :param file_path: raster file path
