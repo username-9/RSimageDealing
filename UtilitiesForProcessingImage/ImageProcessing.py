@@ -2,14 +2,14 @@ import os
 import typing
 from time import sleep
 
-from osgeo import gdal, gdalconst
+from osgeo import gdal, gdalconst, osr
 
 from UtilitiesForProcessingImage.ReadMain import raster_read, read_band_scale_offset
 from UtilitiesForProcessingImage.WriteMain import raster_write
 
 
 def shape_warp_for_raster(raster: str, input_shape: str, out_raster,
-                          open_type: str = gdal.GA_ReadOnly, srs="EPSG:4326", cropToCutline: bool = False,
+                          open_type: str = gdal.GA_ReadOnly, ref_srs="EPSG:4326", cropToCutline: bool = False,
                           nodata=None) -> None:
     """
     To clip raster with a specific shape
@@ -23,6 +23,9 @@ def shape_warp_for_raster(raster: str, input_shape: str, out_raster,
     :return: None
     """
     src = raster_read(raster, open_type)
+    srs = src.GetProjection()
+    if srs is None:
+        srs = ref_srs
     try:
         if nodata is None:
             gdal.Warp(out_raster, src,

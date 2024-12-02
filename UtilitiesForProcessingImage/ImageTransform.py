@@ -23,7 +23,11 @@ def hdf_to_tiff(input_file_path: str, output_file_dir: str,
     :return: None
     """
     hdf_layer = hdf_read(input_file_path)
-    sub_data = gdal.Open(hdf_layer[sub_datasets_num][0])
+    if type(hdf_layer) != list:
+        sub_data = hdf_layer
+    else:
+        sub_data = gdal.Open(hdf_layer[sub_datasets_num][0])
+
     geo_transform = sub_data.GetGeoTransform()
     print(f"geograph transform information: {geo_transform}")
     projection = sub_data.GetProjection()

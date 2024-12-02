@@ -1,5 +1,7 @@
+import os
+
 import numpy as np
-from osgeo import gdal, gdalconst
+from osgeo import gdal, gdalconst, ogr
 
 from UtilitiesForProcessingImage.ReadMain import raster_read
 
@@ -116,6 +118,57 @@ def set_band_scale_offset(ds: gdal.Dataset, scale: list = None, offset: list = N
             del band
     ds.FlushCache()
     print("set scale and offset done")
+
+
+def save_data_source_to_file(data_source: ogr.DataSource, file_path: str, driver_name: str = 'ESRI Shapefile'):
+    # get driver
+    driver = ogr.GetDriverByName(driver_name)
+
+    # delete file if it has existed (maybe wrong in processing for it is using)
+    if driver.TestCapability(ogr.ODrCDeleteDataSource):
+        if os.path.exists(file_path):
+            driver.DeleteDataSource(file_path)
+
+    # create new datasource
+    new_data_source = driver.CreateDataSource(file_path)
+
+    # get layer from o-datasource
+    layer = data_source.GetLayer()
+    layer_defn = layer.GetLayerDefn()
+
+    # create new layer in new datasource
+    new_layer = new_data_source.CreateLayer(layer.GetName(), layer.GetSpatialRef(), layer.GetGeomType())
+
+    # copy the definition of field
+    for i in range(layer_defn.GetFieldCount()):
+        field_defn = layer_defn.GetFieldDefn(i)
+        new_layer.CreateField(field_defn)
+
+    # copy feature
+    feature = layer.GetNextFeature()
+    while feature:
+        new_feature = ogr.Feature(new_layer.GetLayerDefn())
+
+        # copy geometry
+        geom = feature.GetGeometryRef()
+        if geom:
+            new_geom = geom.Clone()
+            new_feature.SetGeometry(new_geom)
+
+        # copy attributions
+        for i in range(feature.GetFieldCount()):
+            new_feature.SetField(feature.GetFieldDefnRef(i).GetNameRef(), feature.GetFieldAsString(i))
+
+        # add new feature to new layer
+        new_layer.CreateFeature(new_feature)
+
+        # clear
+        new_feature = None
+        feature = layer.GetNextFeature()
+
+    # clear
+    new_data_source = None
+    data_source = None
 
 
 if __name__ == "__main__":

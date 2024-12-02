@@ -17,7 +17,7 @@ if __name__ == '__main__':
         (701000, 702000, 703000, 704000, 705000, 706000, 707000,
          709000, 749000, 769000, 755000, 799000): TreeFunction.GuoShuLei
     }
-    file_path = r"C:\Users\PZH\Desktop\江苏项目\节点结果\三区单木碳储量-算\tsq_109m_tree.shp"
+    file_path = r"C:\Users\PZH\Desktop\单木分割shpfile\bhq_67_tree_yssz_deletenull.shp"
     datasource = vector_read(file_path, 1)
     # find_condition = f"YOU_SHI_SZ = {i}"
     # layer = find_attribution(datasource, find_condition)
@@ -35,14 +35,14 @@ if __name__ == '__main__':
                 break
         return field_exists
 
-    xj_field = "xj_0724"
+    xj_field = "xj_1104"
     if not check_field_exist(xj_field):
         print("the field may not exist")
         print(f"create field <{xj_field}>")
         field_name = ogr.FieldDefn(xj_field, ogr.OFTReal)
         if layer.CreateField(field_name) != 0:
             raise Exception(f"Failed to create field {field_name}")
-    tcl_field = "tcl_0724"
+    tcl_field = "tcl_1104"
     if not check_field_exist(tcl_field):
         print("the field may not exist")
         print(f"create field <{tcl_field}>")

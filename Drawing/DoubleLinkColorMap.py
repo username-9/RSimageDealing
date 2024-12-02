@@ -277,58 +277,59 @@ def improve_saturation(img_arr):
 
 if __name__ == "__main__":
     # read rasters
-    raster_1 = r"C:\Users\PZH\Desktop\drawing\MEM\2007_unfragments_sin_1Lha_1_origin.tif"
-    raster_2 = r"C:\Users\PZH\Desktop\drawing\MEM\2007_BTH_USMpop_raster_origin.tif"
-    ds_1 = raster_read(raster_1)
-    ds_2 = raster_read(raster_2)
+    # raster_1 = r"C:\Users\PZH\Desktop\drawing\MEM\2007_unfragments_sin_1Lha_1_origin.tif"
+    # raster_2 = r"C:\Users\PZH\Desktop\drawing\MEM\2007_BTH_USMpop_raster_origin.tif"
+    # ds_1 = raster_read(raster_1)
+    # ds_2 = raster_read(raster_2)
 
     # get two-dim color map array
     # color_arr = two_dimensional_color_map(90, 120, [30, 240],
     #                                       [30, 240], color_num=10, color_block_size=30)
-    # color_arr = two_dimensional_color_map(60, 130, [70, 255],
-    #                                       [70, 255], x_v=[200, 150], y_v=[200, 150],
-    #                                       color_num=10, color_block_size=50, output_size=(1000, 1000))
-    # # color_arr = two_dimensional_color_map(50, 155, [0, 255],
-    # #                                       [0, 255],
-    # #                                       color_num=10, color_block_size=30)
-    # # color_arr = image_improve(color_arr)
-    # color_arr = improve_saturation(color_arr)
+    color_arr = two_dimensional_color_map(70, 126, [60, 255],
+                                          [60, 255], x_v=[200, 140], y_v=[200, 140],
+                                          color_num=10, color_block_size=50, output_size=(1000, 1000))
+    # color_arr = two_dimensional_color_map(50, 155, [0, 255],
+    #                                       [0, 255],
+    #                                       color_num=10, color_block_size=30)
+    # color_arr = image_improve(color_arr)
+    color_arr = improve_saturation(color_arr)
     # color_map_path = r"C:\Users\PZH\Desktop\drawing\MEM\output\color_map_2.png"
-    # # add grid for color map
-    # # add_grid(color_arr, 10)
-    # cv2.imwrite(color_map_path, color_arr)
-    # cv2.imshow("img", color_arr)
-    # cv2.waitKey(0)
-
-    # get the map with color link
-    defined_classification__1_list = [[1.005351, 1000.000000], [1000.000001, 3000.000000],
-                                      [3000.000001, 6000.000000], [6000.000001, 10000.000000],
-                                      [10000.000001, 30000.000000], [30000.000001, 60000.000000],
-                                      [60000.000001, 100000.000000], [100000.000001, 150000.000000],
-                                      [150000.000001, 300000.000000], [300000.000001, 480143.032509]]
-    defined_classification__2_list = [[0.00000, 1.00000], [1.00001, 3.00000],
-                                      [3.00001, 5.00000], [5.00001, 7.00000],
-                                      [7.00001, 10.00000], [10.00001, 15.00000],
-                                      [15.00001, 20.00000], [20.00001, 25.00000],
-                                      [25.00001, 30.00000], [30.00001, 55.94670]]
-
-    # color_arr = cv2.imread(r"C:\Users\PZH\Desktop\drawing\MEM\output\color_map_3.png")
+    color_map_path = r"F:\DATA\DRAW\Vegetation_Resilience\PIC\1_NPP_TAC_ANLYSIS\color_map.png"
+    # add grid for color map
     # add_grid(color_arr, 10)
-    # color_map_path = r"C:\Users\PZH\Desktop\drawing\MEM\output\color_map_output.png"
-    # cv2.imwrite(color_map_path, color_arr)
-    # cv2.imshow("img", color_arr)
-    # cv2.waitKey(0)
-
-    color_arr = cv2.imread(r"C:\Users\PZH\Desktop\drawing\MEM\output\color_map_output.png")
+    cv2.imwrite(color_map_path, color_arr)
     cv2.imshow("img", color_arr)
     cv2.waitKey(0)
 
-    out_array = colormap_array(ds_1, ds_2, color_arr, defined_classification__1_list, defined_classification__2_list)
-    # write array with reference by raster_1
-    ref_geotrans = ds_1.GetGeoTransform()
-    ref_srs = ds_1.GetProjection()
-    del ds_1
-    del ds_2
-    output_path = r"C:\Users\PZH\Desktop\drawing\MEM\output0716\output_map_2007.tif"
-    raster_write(output_path, out_array, projection=ref_srs,
-                 geo_transform=ref_geotrans, data_type=gdal.GDT_UInt16)
+    # # get the map with color link
+    # defined_classification__1_list = [[1.005351, 1000.000000], [1000.000001, 3000.000000],
+    #                                   [3000.000001, 6000.000000], [6000.000001, 10000.000000],
+    #                                   [10000.000001, 30000.000000], [30000.000001, 60000.000000],
+    #                                   [60000.000001, 100000.000000], [100000.000001, 150000.000000],
+    #                                   [150000.000001, 300000.000000], [300000.000001, 480143.032509]]
+    # defined_classification__2_list = [[0.00000, 1.00000], [1.00001, 3.00000],
+    #                                   [3.00001, 5.00000], [5.00001, 7.00000],
+    #                                   [7.00001, 10.00000], [10.00001, 15.00000],
+    #                                   [15.00001, 20.00000], [20.00001, 25.00000],
+    #                                   [25.00001, 30.00000], [30.00001, 55.94670]]
+    #
+    # # color_arr = cv2.imread(r"C:\Users\PZH\Desktop\drawing\MEM\output\color_map_3.png")
+    # # add_grid(color_arr, 10)
+    # # color_map_path = r"C:\Users\PZH\Desktop\drawing\MEM\output\color_map_output.png"
+    # # cv2.imwrite(color_map_path, color_arr)
+    # # cv2.imshow("img", color_arr)
+    # # cv2.waitKey(0)
+    #
+    # color_arr = cv2.imread(r"C:\Users\PZH\Desktop\drawing\MEM\output\color_map_output.png")
+    # cv2.imshow("img", color_arr)
+    # cv2.waitKey(0)
+    #
+    # out_array = colormap_array(ds_1, ds_2, color_arr, defined_classification__1_list, defined_classification__2_list)
+    # # write array with reference by raster_1
+    # ref_geotrans = ds_1.GetGeoTransform()
+    # ref_srs = ds_1.GetProjection()
+    # del ds_1
+    # del ds_2
+    # output_path = r"C:\Users\PZH\Desktop\drawing\MEM\output0716\output_map_2007.tif"
+    # raster_write(output_path, out_array, projection=ref_srs,
+    #              geo_transform=ref_geotrans, data_type=gdal.GDT_UInt16)

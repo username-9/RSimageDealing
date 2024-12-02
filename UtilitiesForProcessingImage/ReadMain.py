@@ -78,7 +78,7 @@ def vector_read(file_path: str, operate_type: int = 0, file_type: str = "ESRI Sh
         print(f"{e}\nmay be the driver cannot be used")
 
 
-def hdf_read(file_path: str, deal_type: str = gdal.GA_ReadOnly) -> gdal.Dataset:
+def hdf_read(file_path: str, deal_type: str = gdal.GA_ReadOnly) -> gdal.Dataset or list:
     """
     read HDF file
     :param file_path: the source file path
@@ -88,10 +88,13 @@ def hdf_read(file_path: str, deal_type: str = gdal.GA_ReadOnly) -> gdal.Dataset:
     try:
         ds = gdal.Open(file_path, deal_type)
         sub_datasets = ds.GetSubDatasets()
-        print('Number of sub-datasets: {}'.format(len(sub_datasets)))
-        for sd in sub_datasets:
-            print('Name: {0}\nDescription:{1}\n'.format(*sd))
-        return sub_datasets
+        if not sub_datasets:
+            return ds
+        else:
+            print('Number of sub-datasets: {}'.format(len(sub_datasets)))
+            for sd in sub_datasets:
+                print('Name: {0}\nDescription:{1}\n'.format(*sd))
+            return sub_datasets
     except Exception as e:
         print(f"{e}\nSome wrongs happened in reading hdf")
 

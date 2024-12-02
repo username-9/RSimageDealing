@@ -4,10 +4,8 @@ import matplotlib.image as mpimg
 if __name__ == "__main__":
     # 加载图片
     # 注意：这里假设你已经有一张名为'example.jpg'的图片在你的工作目录中
-    img = mpimg.imread(r"F:\DATA\DRAW\PIC\color_map.png")
+    img = mpimg.imread(r"F:\DATA\DRAW\Vegetation_Resilience\PIC\1_NPP_TAC_ANLYSIS\color_map_1115.png")
 
-    # 使用plt.imshow()显示图片
-    # 这里不直接使用plt.imshow(img)是因为我们想要对axes有更多的控制
     fig, ax = plt.subplots(figsize=(20, 20))  # 创建一个figure和axes
     ax.imshow(img)  # 在axes上显示图片
     ax: plt.Axes
@@ -29,9 +27,9 @@ if __name__ == "__main__":
     y_list.append(1000)
     ax.set_yticks(y_list)
 
-    labels = ["-0.025", "-0.02", "-0.015", "-0.01", "-0.005", "0", "0.001", "0.005", "0.01", "0.02", "0.03"]
-    ax.set_xticklabels(labels)
-    y_lable = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
+    labels = ["-1", "-0.002", "-0.0015", "-0.001", "-0.0005", "0", "0.0005", "0.001", "0.002", "0.04", "1"]
+    ax.set_xticklabels(labels, rotation=45)
+    y_lable = [0, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, 0.6, 1]
     y_lable.reverse()
     ax.set_yticklabels(y_lable)
 
@@ -61,5 +59,5 @@ if __name__ == "__main__":
 
     # 显示图片
     fig: plt.Figure
-    fig.savefig(r"F:\DATA\DRAW\PIC\1_NPP_TAC_ANLYSIS\ColorMapWithAxies_0919.png")
+    fig.savefig(r"F:\DATA\DRAW\Vegetation_Resilience\PIC\1_NPP_TAC_ANLYSIS\ColorMapWithAxies_1115.png")
     # plt.show()

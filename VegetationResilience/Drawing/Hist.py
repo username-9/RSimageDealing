@@ -16,6 +16,18 @@ class_dict = {
     11 : "MF"
 }
 
+class_dict_1 = {
+    1 : "常绿针叶林",
+    2 : "常绿阔叶林",
+    3 : "落叶针叶林",
+    4 : "落叶阔叶林",
+    5 : "草地",
+    6 : "耕地",
+    7 : "灌木",
+    8 : "居民用地",
+    11 : "混交林"
+}
+
 if __name__ == "__main__":
     plt.rcParams["font.size"] = 42
     plt.rcParams["font.family"] = "Calibri"
@@ -25,7 +37,7 @@ if __name__ == "__main__":
     # get data
     npp_trend = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\NPP_TREND\NPP_TREND_0919.tif"
     tac_1_lag = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0919.tif"
-    lucc = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\LUCC(use)\LUCC_RESAMPLE\CLCD_v01_2021_albert.tif"
+    lucc = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0829_archive\LUCC(use)\LUCC_ALL_SAME_TYPE\TYPE_SAME_VEGETATION_LUCC.tif"
 
     ds_nt = gdal.Open(npp_trend)
     nt_array = ds_nt.GetRasterBand(1).ReadAsArray()
@@ -92,7 +104,7 @@ if __name__ == "__main__":
     ax.set_xlabel("NPP Trend Slope")
     ax.set_ylabel("Probability Density")
     ax.set_ylim(0)
-    fig.savefig(r".\NPY_files\nt_hist_0919.png")
+    fig.savefig(r".\NPY_files\C1_nt_hist_1126.png")
 
 
 

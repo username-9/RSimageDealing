@@ -1,9 +1,11 @@
 import os
 from datetime import datetime, timedelta
 import numpy as np
+import tqdm
 from dateutil.relativedelta import relativedelta
 from numpy import ndarray
-from osgeo import ogr, gdal, gdal_array
+from osgeo import ogr, gdal, gdal_array, osr
+from tqdm.contrib.logging import tqdm_logging_redirect
 
 
 def month_of_day_in_year(_year: int, _day: int) -> int:
@@ -361,6 +363,82 @@ def merge_arrays_with_coords(arrays: ndarray or list[ndarray], coords: tuple[int
         for array, (y, x) in zip(arrays, coords):
             merged_array[: y:y + array.shape[1], x:x + array.shape[2]] = array
         return merged_array
+
+
+def separate_vector(shp_file_path, output_dir, field_for_name, vector_class='ESRI Shapefile', encoding='utf-8'):
+    os.environ['SHAPE_ENCODING'] = encoding
+    # gdal.SetConfigOption("GDAL_FILENAME_IS_UTF8", "YES")
+    # gdal.SetConfigOption("SHAPE_ENCODING", "UTF-8")
+    ogr.RegisterAll()
+    # open vector file
+    driver = ogr.GetDriverByName(vector_class)
+    datasource = driver.Open(shp_file_path, 0)
+    datasource: ogr.DataSource
+    if not datasource:
+        raise Exception("Failed to open datasource")
+
+    # layer
+    layer = datasource.GetLayer()
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    used_names = set()
+
+    # iterate features in layer
+    for feature in tqdm.tqdm(layer):
+        try:
+            field_value = feature.GetField(field_for_name)
+        except ValueError as e:
+            print(f"wrong in get field value")
+            raise e
+        base_name = field_value if field_value else "unknown"
+        name_counter = 0
+
+        output_path = None
+        while f"{base_name}_{name_counter}.shp" in used_names:
+            name_counter += 1
+
+        used_names.add(f"{base_name}_{name_counter}.shp")
+
+        if name_counter == 0:
+            output_path = os.path.join(output_dir, f"{base_name}.shp")
+        else:
+            output_path = os.path.join(output_dir, f"{base_name}_{name_counter}.shp")
+        # create new shp files
+        out_driver = ogr.GetDriverByName(vector_class)
+        if os.path.exists(output_path):
+            out_driver.DeleteDataSource(output_path)
+        # out_driver.CreateDataSource(output_path)
+        ## get data source
+        out_data_source = out_driver.CreateDataSource(output_path)
+        # # get spatial reference system
+        out_srs = osr.SpatialReference()
+        out_srs.ImportFromWkt(layer.GetSpatialRef().ExportToWkt())
+        ## get layer waiting for edit
+        out_layer = out_data_source.CreateLayer(os.path.basename(output_path).split('.')[0], out_srs,
+                                                ogr.wkbPolygon)
+        ## get layer
+        layer_defn = layer.GetLayerDefn()
+        for i in range(layer_defn.GetFieldCount()):
+            field_defn = layer_defn.GetFieldDefn(i)
+            # if field_defn.GetName() != field_for_name:
+            out_layer.CreateField(field_defn)
+
+        ## create output feature
+        out_feature = ogr.Feature(out_layer.GetLayerDefn())
+        for i in range(layer_defn.GetFieldCount()):
+            field_defn = layer_defn.GetFieldDefn(i)
+            out_feature.SetField(field_defn.GetName(), feature.GetField(field_defn.GetName()))
+
+        # set geometry
+        out_feature.SetGeometry(feature.GetGeometryRef().Clone())
+
+        out_layer.CreateFeature(out_feature)
+        out_feature = None
+
+    data_source = None
+    out_data_source = None
 
 
 if __name__ == '__main__':

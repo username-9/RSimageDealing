@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
     # load data
     with open(
-            r"/VegetationResilience/Processing_Script/Time_Series_Processing/Analysis/Analysis_JSON\COUNT_TAC_BIGGER_0P6.json",
+            r"/VegetationResilience/Processing_Script/C_Time_Series_Processing/A_Analysis/F_Analysis_JSON\COUNT_TAC_BIGGER_0P6.json",
               'r') as f:
         data_dict = json.load(f)
     bigger_p_seven = data_dict[">0.7"]
