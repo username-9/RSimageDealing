@@ -8,7 +8,8 @@ from matplotlib import pyplot as plt
 from osgeo import gdal
 
 if __name__ == "__main__":
-    kp_npy_path = r"./RF1_Ref_And_Processing_Files/C2_DETECT_KEY_POINT.npy"
+    # kp_npy_path = r"./RF1_Ref_And_Processing_Files/C2_DETECT_KEY_POINT.npy"
+    kp_npy_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B4_KP_1221\C_DETECT_KEY_POINT.npy"
     kp_arr = np.load(kp_npy_path)
 
     # get location of key points
@@ -61,5 +62,5 @@ if __name__ == "__main__":
             indices = np.where((lucc_arr == c))
             c_arr[i, indices[0], indices[1]] = kp_arr[i, indices[0], indices[1]]
 
-        file_path = rf"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B3_KEY_POINT_LOCATION_EXCEPT_LUCC_CHANGE\Class_{c}.npy"
+        file_path = rf"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B4_KEY_POINT_LOCATION_EXCEPT_LUCC_CHANGE\Class_{c}.npy"
         np.save(file_path, c_arr)

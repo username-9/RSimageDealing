@@ -1,9 +1,8 @@
 import os
 
 import tqdm
-from osgeo import gdal
 
-from UtilitiesForProcessingImage.ImageProcessing import shape_warp_for_raster
+from UtilitiesForProcessingImage.BasicUtility.ImageProcessing import shape_warp_for_raster
 
 if __name__ == "__main__":
     # set directories and file path

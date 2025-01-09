@@ -1,8 +1,8 @@
 from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ImageProcessing import resample_image
-from UtilitiesForProcessingImage.UtilityFunction import workdir_filelist
+from UtilitiesForProcessingImage.BasicUtility.ImageProcessing import resample_image
+from UtilitiesForProcessingImage.BasicUtility.UtilityFunction import workdir_filelist
 
 # def para_resample(input_path, output_dir, width, height):
 #     try:

@@ -1,6 +1,6 @@
 import os
 
-from UtilitiesForProcessingImage.UtilityFunction import merge_tiff_files
+from UtilitiesForProcessingImage.BasicUtility.UtilityFunction import merge_tiff_files
 
 
 if __name__ == '__main__':

@@ -1,16 +1,12 @@
-import sys
 import typing
 from typing import List, Tuple
 
-import numpy as np
 import tqdm
 from osgeo import ogr, osr, gdal
 
-from TreeHeightToDiameter.script import TreeFunction
-from UtilitiesForProcessingImage.FurttherProceing.GetDataFromXlsx import load_csv_for_x_y_data
-from UtilitiesForProcessingImage.FurttherProceing.PointLinkToFish import point_link_to_fish
-from UtilitiesForProcessingImage.ReadMain import vector_read
-from UtilitiesForProcessingImage.WriteMain import save_data_source_to_file
+from UtilitiesForProcessingImage.FurtherProcessing.GetDataFromXlsx import load_csv_for_x_y_data
+from UtilitiesForProcessingImage.FurtherProcessing.PointLinkToFish import point_link_to_fish
+from UtilitiesForProcessingImage.BasicUtility.WriteMain import save_data_source_to_file
 
 
 def find_attribution(ds: ogr.DataSource, _find_condition: str = None):

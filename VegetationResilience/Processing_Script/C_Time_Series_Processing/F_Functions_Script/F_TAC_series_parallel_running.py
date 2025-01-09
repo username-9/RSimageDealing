@@ -62,7 +62,7 @@ if __name__ == '__main__':
     batch_block_num = 20
 
     # get divide regions
-    block = UtilitiesForProcessingImage.ImageBlock.ImageBlock(file_path, 300, 300)
+    block = UtilitiesForProcessingImage.BasicUtility.ImageBlock.ImageBlock(file_path, 300, 300)
     region_generator = block.read_by_generator()
     region_array = block.get_list_of_block_array(batch_block_num, region_generator)
 

@@ -4,9 +4,9 @@ import numpy as np
 from osgeo import gdal, ogr
 
 import TreeFunction
-from UtilitiesForProcessingImage.ImageProcessing import shape_warp_for_raster
-from UtilitiesForProcessingImage.UtilityFunction import fix_vector_error
-from UtilitiesForProcessingImage.WriteMain import array_to_raster
+from UtilitiesForProcessingImage.BasicUtility.ImageProcessing import shape_warp_for_raster
+from UtilitiesForProcessingImage.BasicUtility.UtilityFunction import fix_vector_error
+from UtilitiesForProcessingImage.BasicUtility.WriteMain import array_to_raster
 
 
 # Function to mask a raster based on a shapefile attribute filter

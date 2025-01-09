@@ -1,16 +1,11 @@
 import multiprocessing
-import os
 from multiprocessing import Pool
 
-import cv2
-import numpy as np
-from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ReadMain import raster_read, read_band_scale_offset
+from UtilitiesForProcessingImage.BasicUtility.ReadMain import raster_read
 
-from UtilitiesForProcessingImage import ImageBlock
-from UtilitiesForProcessingImage.WriteMain import raster_write, set_band_scale_offset
+from UtilitiesForProcessingImage.BasicUtility import ImageBlock
 
 
 def drawing_by_block(dataset_1, dataset_2, location):

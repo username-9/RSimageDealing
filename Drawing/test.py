@@ -1,10 +1,5 @@
-from multiprocessing import Pool
-
-from osgeo import ogr, osr
+from osgeo import ogr
 from osgeo import gdal
-import os
-
-from UtilitiesForProcessingImage.UtilityFunction import workdir_filelist
 
 
 def calculated_proportion(in_path1, in_path2, out_path):

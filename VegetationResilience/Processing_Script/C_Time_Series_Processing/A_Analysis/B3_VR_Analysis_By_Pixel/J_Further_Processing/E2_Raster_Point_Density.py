@@ -9,7 +9,7 @@ from osgeo import gdal
 if __name__ == '__main__':
     # definition and path set
     sta_dict = {}
-    npy_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B3_KEY_POINT_LOCATION_EXCEPT_LUCC_CHANGE"
+    npy_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B4_KEY_POINT_LOCATION_EXCEPT_LUCC_CHANGE"
     # out_json_path = r"\RF2_Ref_And_Processing_Files\H_Statistic_by_Time_for_Hist.json"
 
     # iteration about npy to statistic
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     height = ds.RasterYSize
     del ds
     # # construct new raster
-    n_r_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B3_KEY_POINT_LOCATION_EXCEPT_LUCC_CHANGE\KP_LOCATION_Forest_123411_1126.tif"
+    n_r_path = r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B4_KEY_POINT_LOCATION_EXCEPT_LUCC_CHANGE\KP_LOCATION_Forest_123411_1221.tif"
     driver: gdal.Driver = gdal.GetDriverByName('GTiff')
     ds = driver.Create(n_r_path, width, height, 1, gdal.GDT_Int8)
     ds.SetProjection(proj)

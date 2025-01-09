@@ -20,13 +20,34 @@ class_dict = {
 if __name__ == "__main__":
     npy_path = "../Processing_Script/C_Time_Series_Processing/A_Analysis/B3_VR_Analysis_By_Pixel/J_Further_Processing/RF3_Ref_And_Processing_Files/E1_construct_arr_1126.npy"
     p_path = r"../Processing_Script/C_Time_Series_Processing\A_Analysis\B3_VR_Analysis_By_Pixel\J_Further_Processing\RF3_Ref_And_Processing_Files\E2_p_arr_1126.npy"
+    v_path = r"../Processing_Script/C_Time_Series_Processing\A_Analysis\B3_VR_Analysis_By_Pixel\J_Further_Processing\RF3_Ref_And_Processing_Files\E3_variance_1220.npy"
 
-    vr_arr = np.abs(np.load(npy_path))
-    vr_arr[vr_arr.astype(int) == 2] = np.nan
-    p_arr = np.load(p_path)
+    # vr_arr = np.abs(np.load(npy_path))
+    # vr_arr[vr_arr.astype(int) == 2] = np.nan
+    # vmin = np.nanmin(vr_arr)
+    # vmax = np.nanmax(vr_arr)
+    # p_arr = np.load(p_path)
+    v_arr = np.load(v_path)
+    v_arr[v_arr.astype(int) == 2] = np.nan
+    vmin = np.nanmin(v_arr)
+    vmax = np.nanmax(v_arr)
 
     x_tick = [str(num) for num in range(-24, 32)]
+    for i in range(len(x_tick)):
+        if (i % 4) == 0:
+            pass
+        elif i == 0:
+            pass
+        else:
+            x_tick[i] = ""
     y_tick = [str(num) for num in range(0, 421, 10)]
+    for i in range(len(y_tick)):
+        if (i % 5) == 0:
+            pass
+        elif i == 0:
+            pass
+        else:
+            y_tick[i] = ""
     y_tick = y_tick[::-1]
 
     plt.rcParams["font.family"] = "Calibri"
@@ -140,23 +161,26 @@ if __name__ == "__main__":
     # out_path = os.path.join(out_dir, "T_P_V_1.png")
     # fig.savefig(out_path)
 
-    # class_ls = [1, 2, 3, 4, 5, 6, 7, 11]
-    class_ls = [1]
+    class_ls = [1, 2, 3, 4, 5, 6, 7, 11]
+    # class_ls = [1]
     for i in range(len(class_ls)):
         fig, ax = plt.subplots(figsize=(16, 16))
         fig: plt.Figure
         ax: plt.Axes
 
         # im = ax.imshow(vr_arr[i], cmap=cmap, aspect='equal')
-        im = ax.imshow(vr_arr[i, ::-1, :], cmap=cmap, aspect='equal')
-        ax.set_xticks([num for num in range(0, len(x_tick), 2)])
+        # im = ax.imshow(vr_arr[i, ::-1, :], cmap=cmap, aspect='equal', vmin=vmin, vmax=vmax)
+
+        im = ax.imshow(v_arr[i, ::-1, :], cmap=cmap, aspect='equal', vmin=vmin, vmax=vmax)
+
+        ax.set_xticks([num for num in range(0, len(x_tick))])
         ax.set_yticks([num for num in range(0, len(y_tick))])
-        ax.set_xticklabels([x_tick[i] for i in range(0, len(x_tick), 2)], fontsize=20)
-        ax.set_yticklabels(y_tick, fontsize=20)
+        ax.set_xticklabels([x_tick[i] for i in range(0, len(x_tick))], fontsize=30)
+        ax.set_yticklabels(y_tick, fontsize=30)
         ax.set_xlabel("Temperature ($^\circ$C)", labelpad=15, fontweight='bold')
         ax.set_ylabel("Precipitation (mm)", labelpad=15, fontweight='bold')
         title = class_dict[class_ls[i]]
-        ax.text(0.05, 0.95, title, ha='center', va='center', transform=ax.transAxes)
+        ax.text(0.08, 0.935, title, ha='center', va='center', transform=ax.transAxes, fontsize=45)
         # ax.set_title(title, pad=20, fontweight='bold', fontsize= 30)
         # fig.colorbar(im, ax=ax)
         # ax.tick_params(labelsize=10)
@@ -164,6 +188,6 @@ if __name__ == "__main__":
 
 
 
-        out_dir = r"../Processing_Script/C_Time_Series_Processing\A_Analysis\B3_VR_Analysis_By_Pixel\J_Further_Processing\RF3_Ref_And_Processing_Files\A1_TPV_PIC"
-        out_path = os.path.join(out_dir, f"T_P_V_{title}.png")
+        out_dir = r"../Processing_Script/C_Time_Series_Processing\A_Analysis\B3_VR_Analysis_By_Pixel\J_Further_Processing\RF3_Ref_And_Processing_Files\A3_TPV_PIC"
+        out_path = os.path.join(out_dir, f"T_P_V_variance_{title}.png")
         fig.savefig(out_path)

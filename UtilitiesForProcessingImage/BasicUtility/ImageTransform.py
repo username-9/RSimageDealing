@@ -1,13 +1,21 @@
+"""
+File format transformation
+1 HDF to TIFF
+2 NC to TIFF
+3 Separate multi-band raster to single band raster
+4 Transform coordination for datasource
+"""
+
 import os
 
 import numpy as np
-from osgeo import gdal, osr, gdalconst
+from osgeo import gdal, osr
 import netCDF4 as nc
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ReadMain import hdf_read, read_band_scale_offset
-from UtilitiesForProcessingImage.WriteMain import array_to_raster
-from UtilitiesForProcessingImage.ImageProcessing import set_nodata
+from UtilitiesForProcessingImage.BasicUtility.ReadMain import hdf_read, read_band_scale_offset
+from UtilitiesForProcessingImage.BasicUtility.WriteMain import array_to_raster
+from UtilitiesForProcessingImage.BasicUtility.ImageProcessing import set_nodata
 
 
 def hdf_to_tiff(input_file_path: str, output_file_dir: str,
@@ -142,7 +150,7 @@ def nc_to_tiff(input_file_path: str, output_file_dir: str,
                 del ds
 
 
-def multiply_bands_to_band_raster(ds: gdal.Dataset, input_file_path: str, output_file_dir: str, axis = 0):
+def multiply_bands_to_band_raster(ds: gdal.Dataset, output_file_dir: str, axis = 0):
     arr = ds.GetRasterBand(1).ReadAsArray()
     ds_trans = ds.GetGeoTransform()
     ds_proj = ds.GetProjection()
@@ -164,3 +172,30 @@ def multiply_bands_to_band_raster(ds: gdal.Dataset, input_file_path: str, output
         band_ds.WriteArray(band_array)
         band_ds.FlushCache()
         del band_ds
+
+
+def coordination_transform(ds_path: str, target_wkt: str = None, target_proj4: str = None,
+                           out_tif_path: str = 'temp.tif', resample_algorithm: int = gdal.GRA_Bilinear,
+                           x_res = None, y_res = None, to_ds:bool = False):
+    # set target projection
+    target_srs = osr.SpatialReference()
+    if target_wkt is not None:
+        target_srs.ImportFromWkt(target_wkt)
+    elif target_proj4 is not None:
+        target_srs.ImportFromProj4(target_proj4)
+    else:
+        raise ValueError("No target projection defined.")
+
+    # processing
+    gdal.Warp(out_tif_path, ds_path, options=gdal.WarpOptions(dstSRS=target_srs,
+                                                              format='GTiff',
+                                                              xRes=x_res,
+                                                              yRes=y_res,
+                                                              resampleAlg=resample_algorithm))
+
+    # clear
+    if to_ds:
+        dst_ds = gdal.Open(out_tif_path)
+        return dst_ds
+
+

@@ -2,11 +2,11 @@ import multiprocessing
 import os
 from multiprocessing.pool import Pool
 
-from osgeo import gdal, gdalconst
+from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ImageProcessing import shape_warp_for_raster
-from UtilitiesForProcessingImage.ReadMain import raster_read
+from UtilitiesForProcessingImage.BasicUtility.ImageProcessing import shape_warp_for_raster
+from UtilitiesForProcessingImage.BasicUtility.ReadMain import raster_read
 
 
 def par_function(tif_path, shape_path, out_path):

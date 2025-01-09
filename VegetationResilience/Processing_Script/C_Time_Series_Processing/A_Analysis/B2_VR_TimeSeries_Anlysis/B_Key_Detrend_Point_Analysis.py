@@ -42,22 +42,22 @@ def slide_window_detection_by_standard_deviation(data, window_size, significance
 
 
 def calculate_derivative(data, index):
-    if index < 0 or index >= len(data) - 1:
-        raise IndexError("Index out of bounds for calculating derivative.")
-
-    # 前向差分
-    forward_difference = data[index + 1] - data[index]
-
-    # 后向差分
-    backward_difference = data[index] - data[index - 1]
+    difference = None
+    if index < 1:
+        # raise IndexError("Index out of bounds for calculating derivative.")
+        # 前向差分
+        difference = data[index + 1] - data[index]
+    if index >= (len(data) - 1):
+        # 后向差分
+        difference = data[index] - data[index - 1]
 
     # 中心差分（如果索引不是列表的第一个或最后一个元素）
     if 0 < index < len(data) - 1:
-        central_difference = (data[index + 1] - data[index - 1]) / 2
-    else:
-        central_difference = None  # 或者可以选择使用前向或后向差分
+        difference = (data[index + 1] - data[index - 1]) / 2
 
-    return forward_difference
+    if difference is None:
+        raise ValueError("Derivative calculation failed")
+    return difference
 
 
 def detection_by_bg_t_test(data, alpha=0.05, judgment: bool= False):
@@ -164,8 +164,9 @@ if __name__ == '__main__':
     for i in draw_class_ls:
         data_y = sta_dict[str(i)]
         # data_y_smooth = filters.gaussian_filter(data_y, 3)
-        # m_s = detect_all_mutational_site(data_y, 0.5)
-        m_s = slide_window_detection_by_standard_deviation(data_y, window_size=3, significance_threshold=3)
+        m_s = detect_all_mutational_site(data_y, 0.05)
+        # m_s = slide_window_detection_by_standard_deviation(data_y, window_size=3, significance_threshold=3)
         mutational_site_dict[i] = m_s
-    json.dump(mutational_site_dict, open(r'../F_Analysis_JSON/mutational_site_dict.json', 'w'))
+    # json.dump(mutational_site_dict, open(r'../F_Analysis_JSON/mutational_site_dict.json', 'w'))
+    json.dump(mutational_site_dict, open(r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B4_KP_1221/mutational_site_dict_1.json", 'w'))
 

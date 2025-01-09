@@ -1,10 +1,8 @@
-import os
-
 import numpy as np
 import tqdm
 
-from UtilitiesForProcessingImage import ImageBlock
-from UtilitiesForProcessingImage.UtilityFunction import merge_arrays_with_coords
+from UtilitiesForProcessingImage.BasicUtility import ImageBlock
+from UtilitiesForProcessingImage.BasicUtility.UtilityFunction import merge_arrays_with_coords
 from VegetationResilience.Processing_Script.C_Time_Series_Processing.A_Analysis.B2_VR_TimeSeries_Anlysis.B_Key_Detrend_Point_Analysis import \
     detect_all_mutational_site
 

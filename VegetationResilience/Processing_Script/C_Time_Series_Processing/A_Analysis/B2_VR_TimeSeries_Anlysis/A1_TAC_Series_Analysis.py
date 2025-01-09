@@ -6,7 +6,7 @@ import tqdm
 from osgeo import gdal, gdalconst
 from sklearn.linear_model import LinearRegression
 
-import UtilitiesForProcessingImage.ImageBlock
+import UtilitiesForProcessingImage.BasicUtility.ImageBlock
 
 
 def para_cal_s_trend(arr, x_pos, y_pos, x_size, y_size):
@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     # get linear trend from TAC series
     output_trend_raster = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_SERIES\tac_s_trend_0929.tif"
-    block = UtilitiesForProcessingImage.ImageBlock.ImageBlock(tac_series, 300, 300)
+    block = UtilitiesForProcessingImage.BasicUtility.ImageBlock.ImageBlock(tac_series, 300, 300)
     region_gene = block.read_by_generator()
     region_array = block.get_list_of_block_array(20, region_gene)
 

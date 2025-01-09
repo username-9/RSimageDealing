@@ -104,7 +104,7 @@ if __name__ == "__main__":
     ax.set_xlabel("NPP Trend Slope")
     ax.set_ylabel("Probability Density")
     ax.set_ylim(0)
-    fig.savefig(r".\NPY_files\C1_nt_hist_1126.png")
+    fig.savefig(r".\NPY_files\C1_nt_hist_1226.png")
 
 
 

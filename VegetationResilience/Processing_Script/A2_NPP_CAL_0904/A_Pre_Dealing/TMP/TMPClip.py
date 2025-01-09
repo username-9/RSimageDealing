@@ -1,10 +1,9 @@
 import os
 
-from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ImageProcessing import shape_warp_for_raster
-from UtilitiesForProcessingImage.ReadMain import raster_read
+from UtilitiesForProcessingImage.BasicUtility.ImageProcessing import shape_warp_for_raster
+from UtilitiesForProcessingImage.BasicUtility.ReadMain import raster_read
 
 if __name__ == "__main__":
     work_path = r"D:\Data\VegetationResilienceDealing\Integrate_Output\TMP\TMP_TRANSFORM_OUTPUT"

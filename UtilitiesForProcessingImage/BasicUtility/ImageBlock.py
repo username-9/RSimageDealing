@@ -7,11 +7,10 @@ from typing import Generator, Callable
 import numpy as np
 import psutil
 import tqdm
-from PIL.ImageOps import scale
 from osgeo import gdal
 
-from UtilitiesForProcessingImage.ReadMain import read_band_scale_offset
-from UtilitiesForProcessingImage.WriteMain import set_band_scale_offset
+from UtilitiesForProcessingImage.BasicUtility.ReadMain import read_band_scale_offset
+from UtilitiesForProcessingImage.BasicUtility.WriteMain import set_band_scale_offset
 
 
 def memory_usage():
@@ -238,15 +237,33 @@ class ImageBlock:
         return "write done"
 
     def get_list_of_block_array(self, batch_block_num: int, region_generator: Generator) -> Generator:
+        """
+        根据指定的批量大小和区域生成器，将一个大的序列分批生成。
+
+        参数:
+        - batch_block_num (int): 每个批次包含的元素数量。
+        - region_generator (Generator): 一个生成器，用于逐个生成序列的元素。
+
+        返回:
+        - Generator: 一个生成器，每次生成一个批次的元素列表。
+        """
+        # 初始化生成数组为区域生成器
         generate_arr = region_generator
+        # 初始化剩余元素数量为总元素数
         items_left = self.all_num  # 假设 self.all_num 是要生成的总元素数
+        # 初始化当前批次的列表
         batch = []
 
+        # 当剩余元素数量大于0时，继续生成批次
         while items_left > 0:
+            # 计算当前批次的大小，确保不超过剩余元素数量
             this_batch_size = min(batch_block_num, items_left)
+            # 生成当前批次的元素列表
             batch = [next(generate_arr) for _ in range(this_batch_size)]
-            yield batch
+            # 生成当前批次的元素列表后，减少剩余元素数量
             items_left -= this_batch_size
+            # 生成当前批次的元素列表后，减少剩余元素数量
+            yield batch
 
     def parallel_calculation(self, function: typing.Callable, block_num: int, parallel_num: int,
                              region_generator: Generator = None,

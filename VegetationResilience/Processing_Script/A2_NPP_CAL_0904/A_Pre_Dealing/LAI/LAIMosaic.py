@@ -1,9 +1,7 @@
 import os
 from multiprocessing import Pool
 
-from tqdm import tqdm
-
-from UtilitiesForProcessingImage.ImageProcessing import image_mosaic
+from UtilitiesForProcessingImage.BasicUtility.ImageProcessing import image_mosaic
 
 
 def para_cal(file_ls):

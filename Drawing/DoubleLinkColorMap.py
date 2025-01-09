@@ -3,9 +3,6 @@ import numpy as np
 from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ReadMain import raster_read
-from UtilitiesForProcessingImage.WriteMain import raster_write
-
 
 # def double_link_color_map(map_x_data: np.ndarray, map_y_data: np.ndarray, two_dim_color_arr: np.ndarray,
 #                           resize: bool = False, block_position: tuple = (0.1, 0.1, 1, 1)):

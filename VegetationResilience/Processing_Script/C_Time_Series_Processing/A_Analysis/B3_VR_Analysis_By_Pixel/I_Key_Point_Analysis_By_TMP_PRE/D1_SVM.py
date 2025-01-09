@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ReadMain import raster_to_array
+from UtilitiesForProcessingImage.BasicUtility.ReadMain import raster_to_array
 
 
 if __name__ == "__main__":

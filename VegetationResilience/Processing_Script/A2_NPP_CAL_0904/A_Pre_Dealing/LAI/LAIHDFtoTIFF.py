@@ -2,7 +2,7 @@ import os
 
 from osgeo import gdalconst
 
-from UtilitiesForProcessingImage.ImageTransform import hdf_to_tiff
+from UtilitiesForProcessingImage.BasicUtility.ImageTransform import hdf_to_tiff
 
 if __name__ == "__main__":
     # HDF to TIFF

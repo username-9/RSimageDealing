@@ -7,7 +7,7 @@ import os
 
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.UtilityFunction import workdir_filelist
+from UtilitiesForProcessingImage.BasicUtility.UtilityFunction import workdir_filelist
 
 
 def para_cal(input_file_path, output_file_dir, ref_dictionary):

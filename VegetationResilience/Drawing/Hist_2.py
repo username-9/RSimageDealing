@@ -1,27 +1,30 @@
 import numpy as np
 from matplotlib import pyplot as plt
+import matplotlib.font_manager as fm
 from osgeo import gdal
 import scipy.ndimage as filters
 
 
 class_dict = {
-    1 : "ENF",
-    2 : "EBF",
-    3 : "DNF",
-    4 : "DBF",
-    5 : "Grass",
-    6 : "Crop",
-    7 : "Shrub",
-    8 : "Urban",
-    11 : "MF"
+    1 : "常绿针叶林",
+    2 : "常绿阔叶林",
+    3 : "落叶针叶林",
+    4 : "落叶阔叶林",
+    5 : "草地",
+    6 : "耕地",
+    7 : "灌木",
+    8 : "居民用地",
+    11 : "混交林"
 }
 
 if __name__ == "__main__":
     plt.rcParams["font.size"] = 42
-    plt.rcParams["font.family"] = "Calibri"
+    fm.findSystemFonts()
+    plt.rcParams['font.sans-serif'] = ["Calibri"]
     fig, ax = plt.subplots(figsize = (20, 15))
     ax: plt.Axes
-
+    CN_font = 'C:/Windows/Fonts/simhei.ttf'
+    prop = fm.FontProperties(fname=CN_font)
     # get data
     # npp_trend = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\NPP_TREND\NPP_TREND.tif"
     tac_1_lag = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0919.tif"
@@ -37,6 +40,7 @@ if __name__ == "__main__":
 
     # flatten array to one dimension
     t1l_array = t1l_array.flatten()
+    t1l_array = np.abs(t1l_array)
     lucc_array = lucc_array.flatten()
 
     # get data by lucc
@@ -79,11 +83,12 @@ if __name__ == "__main__":
     # ax.fill_between(nt_x, 0, nt_hist, facecolor='skyblue', alpha=0.2)
     # ax.fill_between(t1l_x, 0, t1l_hist, facecolor='red', alpha=0.2)
 
-    ax.legend(loc='upper left', fontsize=42)
-    ax.set_xlabel("1 Lag TAC")
+    ax.legend(loc='upper right', fontsize=42, prop=prop)
+    ax.set_xlabel("TAC lag 1 month")
     ax.set_ylabel("Probability Density")
     ax.set_ylim(0)
-    fig.savefig(r".\NPY_files\t1l_hist_1126.png")
+    ax.set_xlim(0)
+    fig.savefig(r".\NPY_files\t1l_hist_1226.png")
 
 
 

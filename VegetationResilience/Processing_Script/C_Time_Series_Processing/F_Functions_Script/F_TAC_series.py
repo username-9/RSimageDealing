@@ -58,7 +58,7 @@ if __name__ == '__main__':
     output_file = os.path.join(out_dir, "tac_series_0905.tif")
     output_array = os.path.join(out_dir, "tac_series_0905_test.npy")
     time_window = 3
-    block = UtilitiesForProcessingImage.ImageBlock.ImageBlock(file_path, 200, 200)
+    block = UtilitiesForProcessingImage.BasicUtility.ImageBlock.ImageBlock(file_path, 200, 200)
     arr_size = (block.image_bands-time_window+1, block.image_height, block.image_width)
     re_arr = np.ones(arr_size) * 2
     # handle by block

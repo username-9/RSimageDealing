@@ -3,7 +3,7 @@ import os
 from osgeo import gdalconst, gdal
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.ImageTransform import nc_to_tiff
+from UtilitiesForProcessingImage.BasicUtility.ImageTransform import nc_to_tiff
 
 if __name__ == "__main__":
     work_path = r"D:\Data\VegetationResilienceDealing\SRC\TMP"

@@ -1,18 +1,13 @@
 import os
 
-import dask
 from dask import array as dask_array
-from typing import Any, Generator
 
 import numpy as np
-import matplotlib.pyplot as plt
-import tqdm
 from numpy import ndarray
 from osgeo import gdalconst
 
 import UtilitiesForProcessingImage
 from F_Image_TAC import acf
-from multiprocessing import Process, Pool, Array
 
 
 def tac_series(series_name: np.ndarray, _time_window: int, lag: int = 1) -> ndarray:
@@ -53,7 +48,7 @@ if __name__ == "__main__":
     output_file = os.path.join(out_dir, "tac_series_0905.tif")
     output_array = os.path.join(out_dir, "tac_series_0905_test.npy")
     time_window = 3
-    block = UtilitiesForProcessingImage.ImageBlock.ImageBlock(file_path, 300, 300)
+    block = UtilitiesForProcessingImage.BasicUtility.ImageBlock.ImageBlock(file_path, 300, 300)
     # arr_size = (block.image_bands - time_window + 1, block.image_height, block.image_width)
     # re_arr = np.ones(arr_size) * 2
 

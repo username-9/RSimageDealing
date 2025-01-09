@@ -1,18 +1,10 @@
-import multiprocessing
 import os
-from multiprocessing import Pool
 
-import pandas as pd
-from fontTools.ttx import process
-from numba.cuda.simulator.cudadrv.driver import driver
-from osgeo import gdal, gdalconst
+from osgeo import gdal
 from sklearn import linear_model
 
 import numpy as np
-from statsmodels.sandbox.distributions.mv_normal import np_pi
 from tqdm import tqdm
-
-from UtilitiesForProcessingImage.ImageBlock import ImageBlock
 
 
 def linear_detrend(ser: np.ndarray) -> tuple[np.ndarray, any, any]:

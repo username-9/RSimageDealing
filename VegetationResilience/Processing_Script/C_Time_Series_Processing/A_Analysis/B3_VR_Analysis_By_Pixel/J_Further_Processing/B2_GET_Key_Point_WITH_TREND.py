@@ -1,10 +1,8 @@
-import os
-
 import numpy as np
 import tqdm
 
-from UtilitiesForProcessingImage import ImageBlock
-from UtilitiesForProcessingImage.UtilityFunction import merge_arrays_with_coords
+from UtilitiesForProcessingImage.BasicUtility import ImageBlock
+from UtilitiesForProcessingImage.BasicUtility.UtilityFunction import merge_arrays_with_coords
 from VegetationResilience.Processing_Script.C_Time_Series_Processing.A_Analysis.B2_VR_TimeSeries_Anlysis.B_Key_Detrend_Point_Analysis import \
     detect_all_mutational_site
 
@@ -41,7 +39,7 @@ if __name__ == "__main__":
         for item in re_list:
             arr, x_pos, y_pos = item
             merge_arrays_with_coords(arr, (y_pos, x_pos), merge_array)
-    ndarray_filepath = "./RF3_Ref_And_Processing_Files/C_DETECT_KEY_POINT.npy"
+    ndarray_filepath = r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B4_KP_1221\C_DETECT_KEY_POINT.npy"
     np.save(ndarray_filepath, merge_array)
 
 

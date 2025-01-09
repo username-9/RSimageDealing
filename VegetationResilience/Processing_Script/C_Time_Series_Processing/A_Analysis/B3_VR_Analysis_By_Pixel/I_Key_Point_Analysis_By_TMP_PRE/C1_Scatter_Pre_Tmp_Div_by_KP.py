@@ -6,7 +6,7 @@ import tqdm
 from dateutil.relativedelta import relativedelta
 from matplotlib import pyplot as plt
 
-from UtilitiesForProcessingImage.ReadMain import raster_to_array
+from UtilitiesForProcessingImage.BasicUtility.ReadMain import raster_to_array
 
 if __name__ == "__main__":
     # direction set

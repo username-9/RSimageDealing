@@ -26,11 +26,11 @@ if __name__ == "__main__":
 
     # read rasters
     raster_1 = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\NPP_TREND\NPP_TREND_0919.tif"
-    raster_2 = r"F:\DATA\Vegetation_Resilience_D_DATA_C\0903_archive\TIME_SERIES_HANDLE\TAC_1_LAG\tca_1lag_0919.tif"
+    raster_2 = r"F:\DATA\DRAW\Vegetation_Resilience\PIC\6_PIC_REPEAT_1126\tac_trend_1202.tif"
     ds_1 = raster_read(raster_1)
     ds_2 = raster_read(raster_2)
 
-    color_arr = cv2.imread(r"F:\DATA\DRAW\Vegetation_Resilience\PIC\1_NPP_TAC_ANLYSIS\color_map.png")
+    color_arr = cv2.imread(r"F:\DATA\DRAW\Vegetation_Resilience\PIC\1_NPP_TAC_ANLYSIS\color_map_1212.png")
 
     # past 1115
     # defined_classification__1_list = [[-0.025, -0.020001],[-0.02, -0.0151],
@@ -50,11 +50,11 @@ if __name__ == "__main__":
                                       [-0.0005, 0], [0.0000001, 0.0005],
                                       [0.0050001, 0.001], [0.0010001, 0.002],
                                       [0.00200001, 0.004], [0.00400001, 1]]
-    defined_classification__2_list = [[0, 0.1], [0.10001, 0.15],
-                                      [0.150001, 0.2], [0.20001, 0.25],
-                                      [0.250001, 0.3], [0.30001, 0.35],
-                                      [0.350001, 0.4], [0.40001, 0.5],
-                                      [0.50001, 0.6], [0.60001, 1]]
+    defined_classification__2_list = [[-1, -0.00040001], [-0.0004, -0.00030001],
+                                      [-0.0003, -0.0002001], [-0.0002, -0.00010001],
+                                      [-0.0001, 0], [0, 0.0001],
+                                      [0.00010001, 0.0002], [0.00020001, 0.0003],
+                                      [0.00030001, 0.0004], [0.0004001, 0.9]]
 
     out_array = colormap_array(ds_1, ds_2, color_arr, defined_classification__1_list, defined_classification__2_list)
     # write array with reference by raster_1
@@ -62,6 +62,6 @@ if __name__ == "__main__":
     ref_srs = ds_1.GetProjection()
     del ds_1
     del ds_2
-    output_path = r"F:\DATA\DRAW\Vegetation_Resilience\PIC\1_NPP_TAC_ANLYSIS\npp_trend_TAC_map_1115.tif"
+    output_path = r"F:\DATA\DRAW\Vegetation_Resilience\PIC\6_PIC_REPEAT_1126\TWO_COLOR_MAP\npp_trend_TAC_trend_map_1212_2.tif"
     raster_write(output_path, out_array, projection=ref_srs,
                  geo_transform=ref_geotrans, data_type=gdal.GDT_UInt16)

@@ -3,7 +3,7 @@ from multiprocessing import Pool
 
 from osgeo import gdalconst
 
-from UtilitiesForProcessingImage.ImageTransform import hdf_to_tiff
+from UtilitiesForProcessingImage.BasicUtility.ImageTransform import hdf_to_tiff
 
 
 def para_cal(file):

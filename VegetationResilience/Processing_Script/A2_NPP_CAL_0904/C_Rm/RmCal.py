@@ -3,11 +3,10 @@ import os
 from multiprocessing import Pool
 
 import numpy as np
-from matplotlib.pyplot import pause
 from osgeo import gdal
 from tqdm import tqdm
 
-from UtilitiesForProcessingImage.UtilityFunction import workdir_filelist
+from UtilitiesForProcessingImage.BasicUtility.UtilityFunction import workdir_filelist
 
 
 def get_year_para_array(directory, year_i):

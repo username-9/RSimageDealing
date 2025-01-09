@@ -1,11 +1,9 @@
 import os
-import typing
-from time import sleep
 
-from osgeo import gdal, gdalconst, osr
+from osgeo import gdal, gdalconst
 
-from UtilitiesForProcessingImage.ReadMain import raster_read, read_band_scale_offset
-from UtilitiesForProcessingImage.WriteMain import raster_write
+from UtilitiesForProcessingImage.BasicUtility.ReadMain import raster_read, read_band_scale_offset
+from UtilitiesForProcessingImage.BasicUtility.WriteMain import raster_write
 
 
 def shape_warp_for_raster(raster: str, input_shape: str, out_raster,

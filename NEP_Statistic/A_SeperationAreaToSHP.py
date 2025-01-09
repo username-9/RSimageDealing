@@ -1,6 +1,4 @@
-from osgeo import ogr, gdal
-
-from UtilitiesForProcessingImage.UtilityFunction import separate_vector
+from UtilitiesForProcessingImage.BasicUtility.UtilityFunction import separate_vector
 
 if __name__ == "__main__":
     # set directories and file path

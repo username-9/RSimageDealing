@@ -8,8 +8,8 @@ import tqdm
 if __name__ == '__main__':
     # definition and path set
     sta_dict = {}
-    npy_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B3_KEY_POINT_LOCATION_EXCEPT_LUCC_CHANGE"
-    out_json_path = "RF3_Ref_And_Processing_Files/H1_Statistic_by_Time_for_Hist_e2.json"
+    npy_dir = r"F:\DATA\Vegetation_Resilience_D_DATA_C\1101_archive\B4_KEY_POINT_LOCATION_EXCEPT_LUCC_CHANGE"
+    out_json_path = "RF3_Ref_And_Processing_Files/H4_Statistic_by_Time_for_Hist_e2_2021.json"
 
     # iteration about npy to statistic
     npy_ls = os.listdir(npy_dir)
